@@ -1,0 +1,544 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		21E0C9C26E0A6D98E7DED89F /* Pods_ZANotificationBar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5361CBF7363243C56A34FA0C /* Pods_ZANotificationBar.framework */; };
+		C814C9991EB08C5A00DDFB2D /* ZANotifyAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C814C9981EB08C5A00DDFB2D /* ZANotifyAction.m */; };
+		C814C99C1EB095F000DDFB2D /* ZANotificationBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C814C99B1EB095F000DDFB2D /* ZANotificationBarView.m */; };
+		C854956B1EB04F08007F1BAB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C854956A1EB04F08007F1BAB /* main.m */; };
+		C854956E1EB04F08007F1BAB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C854956D1EB04F08007F1BAB /* AppDelegate.m */; };
+		C85495711EB04F08007F1BAB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C85495701EB04F08007F1BAB /* ViewController.m */; };
+		C85495741EB04F08007F1BAB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C85495721EB04F08007F1BAB /* Main.storyboard */; };
+		C85495761EB04F08007F1BAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C85495751EB04F08007F1BAB /* Assets.xcassets */; };
+		C85495791EB04F08007F1BAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C85495771EB04F08007F1BAB /* LaunchScreen.storyboard */; };
+		C85495841EB04F08007F1BAB /* ZANotificationBarTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C85495831EB04F08007F1BAB /* ZANotificationBarTests.m */; };
+		C85495941EB05BC4007F1BAB /* ZANotificationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C85495931EB05BC4007F1BAB /* ZANotificationBar.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C85495801EB04F08007F1BAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C854955E1EB04F08007F1BAB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C85495651EB04F08007F1BAB;
+			remoteInfo = ZANotificationBar;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0F946C90BAC0B64AF92C162E /* Pods-ZANotificationBar.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZANotificationBar.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZANotificationBar/Pods-ZANotificationBar.debug.xcconfig"; sourceTree = "<group>"; };
+		5361CBF7363243C56A34FA0C /* Pods_ZANotificationBar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZANotificationBar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		59312F4EB538676B1DBD7FCA /* Pods-ZANotificationBar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZANotificationBar.release.xcconfig"; path = "Pods/Target Support Files/Pods-ZANotificationBar/Pods-ZANotificationBar.release.xcconfig"; sourceTree = "<group>"; };
+		C814C9971EB08C5A00DDFB2D /* ZANotifyAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZANotifyAction.h; sourceTree = "<group>"; };
+		C814C9981EB08C5A00DDFB2D /* ZANotifyAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZANotifyAction.m; sourceTree = "<group>"; };
+		C814C99A1EB095F000DDFB2D /* ZANotificationBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZANotificationBarView.h; sourceTree = "<group>"; };
+		C814C99B1EB095F000DDFB2D /* ZANotificationBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZANotificationBarView.m; sourceTree = "<group>"; };
+		C85495661EB04F08007F1BAB /* ZANotificationBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZANotificationBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C854956A1EB04F08007F1BAB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		C854956C1EB04F08007F1BAB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		C854956D1EB04F08007F1BAB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		C854956F1EB04F08007F1BAB /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		C85495701EB04F08007F1BAB /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		C85495731EB04F08007F1BAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C85495751EB04F08007F1BAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C85495781EB04F08007F1BAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		C854957A1EB04F08007F1BAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C854957F1EB04F08007F1BAB /* ZANotificationBarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZANotificationBarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C85495831EB04F08007F1BAB /* ZANotificationBarTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZANotificationBarTests.m; sourceTree = "<group>"; };
+		C85495851EB04F08007F1BAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C85495921EB05BC4007F1BAB /* ZANotificationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZANotificationBar.h; sourceTree = "<group>"; };
+		C85495931EB05BC4007F1BAB /* ZANotificationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZANotificationBar.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C85495631EB04F08007F1BAB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21E0C9C26E0A6D98E7DED89F /* Pods_ZANotificationBar.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C854957C1EB04F08007F1BAB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0C2CB25AF80F07215D4DC9CB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5361CBF7363243C56A34FA0C /* Pods_ZANotificationBar.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1FC8CE87438631390E3E292E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0F946C90BAC0B64AF92C162E /* Pods-ZANotificationBar.debug.xcconfig */,
+				59312F4EB538676B1DBD7FCA /* Pods-ZANotificationBar.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		C854955D1EB04F08007F1BAB = {
+			isa = PBXGroup;
+			children = (
+				C85495681EB04F08007F1BAB /* ZANotificationBar */,
+				C85495821EB04F08007F1BAB /* ZANotificationBarTests */,
+				C85495671EB04F08007F1BAB /* Products */,
+				1FC8CE87438631390E3E292E /* Pods */,
+				0C2CB25AF80F07215D4DC9CB /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		C85495671EB04F08007F1BAB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C85495661EB04F08007F1BAB /* ZANotificationBar.app */,
+				C854957F1EB04F08007F1BAB /* ZANotificationBarTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C85495681EB04F08007F1BAB /* ZANotificationBar */ = {
+			isa = PBXGroup;
+			children = (
+				C85495911EB05B98007F1BAB /* Resouces */,
+				C854958F1EB05B84007F1BAB /* Sources */,
+				C854956C1EB04F08007F1BAB /* AppDelegate.h */,
+				C854956D1EB04F08007F1BAB /* AppDelegate.m */,
+				C854956F1EB04F08007F1BAB /* ViewController.h */,
+				C85495701EB04F08007F1BAB /* ViewController.m */,
+				C85495721EB04F08007F1BAB /* Main.storyboard */,
+				C85495751EB04F08007F1BAB /* Assets.xcassets */,
+				C85495771EB04F08007F1BAB /* LaunchScreen.storyboard */,
+				C854957A1EB04F08007F1BAB /* Info.plist */,
+				C85495691EB04F08007F1BAB /* Supporting Files */,
+			);
+			path = ZANotificationBar;
+			sourceTree = "<group>";
+		};
+		C85495691EB04F08007F1BAB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C854956A1EB04F08007F1BAB /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C85495821EB04F08007F1BAB /* ZANotificationBarTests */ = {
+			isa = PBXGroup;
+			children = (
+				C85495831EB04F08007F1BAB /* ZANotificationBarTests.m */,
+				C85495851EB04F08007F1BAB /* Info.plist */,
+			);
+			path = ZANotificationBarTests;
+			sourceTree = "<group>";
+		};
+		C854958F1EB05B84007F1BAB /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				C85495921EB05BC4007F1BAB /* ZANotificationBar.h */,
+				C85495931EB05BC4007F1BAB /* ZANotificationBar.m */,
+				C814C9971EB08C5A00DDFB2D /* ZANotifyAction.h */,
+				C814C9981EB08C5A00DDFB2D /* ZANotifyAction.m */,
+				C814C99A1EB095F000DDFB2D /* ZANotificationBarView.h */,
+				C814C99B1EB095F000DDFB2D /* ZANotificationBarView.m */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		C85495911EB05B98007F1BAB /* Resouces */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resouces;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C85495651EB04F08007F1BAB /* ZANotificationBar */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C85495881EB04F08007F1BAB /* Build configuration list for PBXNativeTarget "ZANotificationBar" */;
+			buildPhases = (
+				66B3E14A57C6ADE9DD53599D /* [CP] Check Pods Manifest.lock */,
+				C85495621EB04F08007F1BAB /* Sources */,
+				C85495631EB04F08007F1BAB /* Frameworks */,
+				C85495641EB04F08007F1BAB /* Resources */,
+				776162E4CB82834C84A724C6 /* [CP] Embed Pods Frameworks */,
+				8205761502529564C88D689A /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ZANotificationBar;
+			productName = ZANotificationBar;
+			productReference = C85495661EB04F08007F1BAB /* ZANotificationBar.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C854957E1EB04F08007F1BAB /* ZANotificationBarTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C854958B1EB04F08007F1BAB /* Build configuration list for PBXNativeTarget "ZANotificationBarTests" */;
+			buildPhases = (
+				C854957B1EB04F08007F1BAB /* Sources */,
+				C854957C1EB04F08007F1BAB /* Frameworks */,
+				C854957D1EB04F08007F1BAB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C85495811EB04F08007F1BAB /* PBXTargetDependency */,
+			);
+			name = ZANotificationBarTests;
+			productName = ZANotificationBarTests;
+			productReference = C854957F1EB04F08007F1BAB /* ZANotificationBarTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C854955E1EB04F08007F1BAB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = CPU11713;
+				TargetAttributes = {
+					C85495651EB04F08007F1BAB = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 2X825966A4;
+						ProvisioningStyle = Automatic;
+					};
+					C854957E1EB04F08007F1BAB = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 2X825966A4;
+						ProvisioningStyle = Automatic;
+						TestTargetID = C85495651EB04F08007F1BAB;
+					};
+				};
+			};
+			buildConfigurationList = C85495611EB04F08007F1BAB /* Build configuration list for PBXProject "ZANotificationBar" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C854955D1EB04F08007F1BAB;
+			productRefGroup = C85495671EB04F08007F1BAB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C85495651EB04F08007F1BAB /* ZANotificationBar */,
+				C854957E1EB04F08007F1BAB /* ZANotificationBarTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C85495641EB04F08007F1BAB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C85495791EB04F08007F1BAB /* LaunchScreen.storyboard in Resources */,
+				C85495761EB04F08007F1BAB /* Assets.xcassets in Resources */,
+				C85495741EB04F08007F1BAB /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C854957D1EB04F08007F1BAB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		66B3E14A57C6ADE9DD53599D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		776162E4CB82834C84A724C6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ZANotificationBar/Pods-ZANotificationBar-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8205761502529564C88D689A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ZANotificationBar/Pods-ZANotificationBar-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C85495621EB04F08007F1BAB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C85495711EB04F08007F1BAB /* ViewController.m in Sources */,
+				C85495941EB05BC4007F1BAB /* ZANotificationBar.m in Sources */,
+				C854956E1EB04F08007F1BAB /* AppDelegate.m in Sources */,
+				C814C99C1EB095F000DDFB2D /* ZANotificationBarView.m in Sources */,
+				C854956B1EB04F08007F1BAB /* main.m in Sources */,
+				C814C9991EB08C5A00DDFB2D /* ZANotifyAction.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C854957B1EB04F08007F1BAB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C85495841EB04F08007F1BAB /* ZANotificationBarTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C85495811EB04F08007F1BAB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C85495651EB04F08007F1BAB /* ZANotificationBar */;
+			targetProxy = C85495801EB04F08007F1BAB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		C85495721EB04F08007F1BAB /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C85495731EB04F08007F1BAB /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		C85495771EB04F08007F1BAB /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C85495781EB04F08007F1BAB /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C85495861EB04F08007F1BAB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		C85495871EB04F08007F1BAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C85495891EB04F08007F1BAB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0F946C90BAC0B64AF92C162E /* Pods-ZANotificationBar.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2X825966A4;
+				INFOPLIST_FILE = ZANotificationBar/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.VNG.Huy.ZANotificationBar;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C854958A1EB04F08007F1BAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 59312F4EB538676B1DBD7FCA /* Pods-ZANotificationBar.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2X825966A4;
+				INFOPLIST_FILE = ZANotificationBar/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.VNG.Huy.ZANotificationBar;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		C854958C1EB04F08007F1BAB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 2X825966A4;
+				INFOPLIST_FILE = ZANotificationBarTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.VNG.Huy.ZANotificationBarTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZANotificationBar.app/ZANotificationBar";
+			};
+			name = Debug;
+		};
+		C854958D1EB04F08007F1BAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 2X825966A4;
+				INFOPLIST_FILE = ZANotificationBarTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.VNG.Huy.ZANotificationBarTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZANotificationBar.app/ZANotificationBar";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C85495611EB04F08007F1BAB /* Build configuration list for PBXProject "ZANotificationBar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C85495861EB04F08007F1BAB /* Debug */,
+				C85495871EB04F08007F1BAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C85495881EB04F08007F1BAB /* Build configuration list for PBXNativeTarget "ZANotificationBar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C85495891EB04F08007F1BAB /* Debug */,
+				C854958A1EB04F08007F1BAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C854958B1EB04F08007F1BAB /* Build configuration list for PBXNativeTarget "ZANotificationBarTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C854958C1EB04F08007F1BAB /* Debug */,
+				C854958D1EB04F08007F1BAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C854955E1EB04F08007F1BAB /* Project object */;
+}
