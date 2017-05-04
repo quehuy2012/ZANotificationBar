@@ -7,9 +7,12 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
+#import "Masonry.h"
 #import "ZANotificationBar.h"
 #import "ZANotificationBarView.h"
+#import "ZANotificationBarContext.h"
 #import "ZANotifyAction.h"
+#import "NSString+Character.h"
 
 #define WINDOW_WIDTH [UIApplication sharedApplication].keyWindow.bounds.size.width
 #define APP_DELEGATE [UIApplication sharedApplication]
@@ -19,11 +22,7 @@
 
 @property (nonatomic, readwrite) CGFloat height;
 
-@property (nonatomic, readwrite) NSMutableArray<ZANotifyAction *> *internalActions;
-
 @property (nonatomic, readwrite) NSTimer *timer;
-
-@property (nonatomic, readwrite) BOOL showNotificationInDetail;
 
 @end
 
@@ -32,22 +31,22 @@
 
 #pragma mark - Init
 
-- (instancetype)initWithTitle:(NSString *)title
-                      message:(NSString *)message
+- (instancetype)initWithHeader:(NSString *)header
+                          body:(NSString *)body
                preferredStyle:(ZANotificationStyle)preferredStyle
                       handler:(void (^)(BOOL))handler {
     if (self = [super init]) {
-        _internalActions = [NSMutableArray array];
         _handler = handler;
         _displayDuration = 5.0;
-        _showNotificationInDetail = YES;
+        _context = [[ZANotificationBarContext alloc] init];
+        
         
         if (APP_DELEGATE.keyWindow.subviews) {
-            [self setUpNotificationBarWithTitle:title message:message notificationStyle:preferredStyle];
+            [self setUpNotificationBarWithHeader:header body:body notificationStyle:preferredStyle];
         }
         else {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self setUpNotificationBarWithTitle:title message:message notificationStyle:preferredStyle];
+                [self setUpNotificationBarWithHeader:header body:body notificationStyle:preferredStyle];
             });
         }
         
@@ -63,8 +62,8 @@
     return self;
 }
 
-- (void)setUpNotificationBarWithTitle:(NSString *)title
-                              message:(NSString *)message
+- (void)setUpNotificationBarWithHeader:(NSString *)header
+                                  body:(NSString *)body
                     notificationStyle:(ZANotificationStyle)notificationStyle {
     for (UIView *subView in APP_DELEGATE.keyWindow.subviews) {
         // Clear old notification from queue
@@ -77,22 +76,64 @@
     self.notificationBar = [[ZANotificationBarView alloc] initWithFrame:frame];
     self.notificationBar.translatesAutoresizingMaskIntoConstraints = NO;
     
-#warning line 241 bên swift
     switch (notificationStyle) {
         case ZANotificationStyleDetail:
-            
+            self.notificationBar.notificationStyleIndicator.hidden = NO;
+            self.context.showNotificationInDetail = YES;
             break;
-            
         default:
+            self.notificationBar.notificationStyleIndicator.hidden = YES;
+            self.context.showNotificationInDetail = NO;
             break;
     }
     
-}
-
-#pragma mark - Getters
-
-- (NSArray *)actions {
-    return [_internalActions copy];
+    if ([header characterCount] == 0) {
+        self.notificationBar.bodyLabel.text = body;
+    }
+    else {
+        NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@",header,body]];
+        [attributeString addAttributes:@{ NSFontAttributeName : [UIFont boldSystemFontOfSize:15] } range:NSMakeRange(0, [header characterCount])];
+        self.notificationBar.bodyLabel.attributedText = attributeString;
+    }
+    
+    NSDictionary *infoDictionary = [NSBundle mainBundle].infoDictionary;
+    self.context.appName = infoDictionary[@"CFBundleName"];
+    self.notificationBar.headerLabel.text = self.context.appName;
+    
+    if (infoDictionary[@"CFBundleIcons"]) {
+        infoDictionary = infoDictionary[@"CFBundleIcons"][@"CFBundlePrimaryIcon"];
+        self.context.appIconName = ((NSArray *)infoDictionary[@"CFBundleIconFiles"]).firstObject;
+        self.notificationBar.appIcon.image = [UIImage imageNamed:self.context.appIconName];
+    } else {
+        self.notificationBar.appIcon.layer.borderColor = [UIColor grayColor].CGColor;
+        self.notificationBar.appIcon.layer.borderWidth = 1.0;
+        
+        self.context.appIconName = @"";
+        NSLog(@"Not found app icon");
+    }
+    
+    self.notificationBar.appIcon.layer.cornerRadius = 5.0;
+    self.notificationBar.appIcon.clipsToBounds = YES;
+    
+#warning not sure is headerVisual or contentVisual
+    self.notificationBar.contentVisualEffectView.layer.cornerRadius = 14.0;
+    self.notificationBar.contentVisualEffectView.clipsToBounds = YES;
+    
+    UITapGestureRecognizer *didSelectMessageTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self.notificationBar action:@selector(didSelectMessage:)];
+    [self.notificationBar addGestureRecognizer:didSelectMessageTapGesture];
+    
+    __weak typeof(self) weakSelf = self;
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        weakSelf.notificationBar.frame = CGRectMake(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
+    } completion:nil];
+    
+    APP_DELEGATE.keyWindow.windowLevel = UIWindowLevelStatusBar + 1;
+    [APP_DELEGATE.keyWindow addSubview:self.notificationBar];
+    
+    [self.notificationBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.and.top.equalTo(self.notificationBar.superview);
+        make.height.equalTo(@100);
+    }];
 }
 
 #pragma mark - Publics
@@ -124,7 +165,7 @@
 }
 
 - (void)addAction:(ZANotifyAction *)action {
-    [self.internalActions addObject:action];
+    [self.context addAction:action];
 }
 
 - (void)hideNotification:(UIButton *)sender {

@@ -11,6 +11,7 @@
 
 @class ZANotifyAction;
 @class ZANotificationBarView;
+@class ZANotificationBarContext;
 
 /**
  The notification styles
@@ -27,31 +28,29 @@ typedef NS_ENUM(NSInteger, ZANotificationStyle) {
 
 @interface ZANotificationBar : NSObject
 
-
 /**
  The display duration of the notification bar. The default value is `5 second`
  If 0 is set, notification bar auto hide will be disabled.
  */
 @property (nonatomic, readwrite) double displayDuration;
 
-@property (nonatomic, readonly) NSArray<ZANotifyAction *> *actions;
-
 @property (nonatomic, copy) void (^handler)(BOOL);
 
 @property (nonatomic, readwrite) ZANotificationBarView *notificationBar;
 
+@property (nonatomic, readwrite) ZANotificationBarContext *context;
 
 /**
  Init a notifacation bar for displaying an alert to the user.
 
- @param title The title of alert
- @param message Descriptive text that provides additional details about the reason for the alert
+ @param header The title of alert
+ @param body Descriptive text that provides additional details about the reason for the alert
  @param preferredStyle The style of the alert. Use this parameter to configure the notification bar as an `simple` or `detail`
  @param handler The block that execute when the use selects the notification message.
  @return an instance ZANotificationBar object
  */
-- (instancetype)initWithTitle:(NSString *)title
-                      message:(NSString *)message
+- (instancetype)initWithHeader:(NSString *)header
+                          body:(NSString *)body
                preferredStyle:(ZANotificationStyle)preferredStyle
                       handler:(void (^)(BOOL))handler;
 
@@ -70,3 +69,6 @@ typedef NS_ENUM(NSInteger, ZANotificationStyle) {
 - (void)hideNotification:(UIButton *)sender;
 
 @end
+
+extern NSString * kAppName;
+extern NSString * kAppIconName;

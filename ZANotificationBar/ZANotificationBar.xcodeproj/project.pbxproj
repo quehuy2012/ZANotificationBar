@@ -10,6 +10,8 @@
 		21E0C9C26E0A6D98E7DED89F /* Pods_ZANotificationBar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5361CBF7363243C56A34FA0C /* Pods_ZANotificationBar.framework */; };
 		C814C9991EB08C5A00DDFB2D /* ZANotifyAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C814C9981EB08C5A00DDFB2D /* ZANotifyAction.m */; };
 		C814C99C1EB095F000DDFB2D /* ZANotificationBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C814C99B1EB095F000DDFB2D /* ZANotificationBarView.m */; };
+		C81D2BB81EBB1E780007410E /* ZANotificationBarContext.m in Sources */ = {isa = PBXBuildFile; fileRef = C81D2BB71EBB1E780007410E /* ZANotificationBarContext.m */; };
+		C854452B1EBADF7700E1F562 /* NSString+Character.m in Sources */ = {isa = PBXBuildFile; fileRef = C854452A1EBADF7700E1F562 /* NSString+Character.m */; };
 		C854956B1EB04F08007F1BAB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C854956A1EB04F08007F1BAB /* main.m */; };
 		C854956E1EB04F08007F1BAB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C854956D1EB04F08007F1BAB /* AppDelegate.m */; };
 		C85495711EB04F08007F1BAB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C85495701EB04F08007F1BAB /* ViewController.m */; };
@@ -38,6 +40,10 @@
 		C814C9981EB08C5A00DDFB2D /* ZANotifyAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZANotifyAction.m; sourceTree = "<group>"; };
 		C814C99A1EB095F000DDFB2D /* ZANotificationBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZANotificationBarView.h; sourceTree = "<group>"; };
 		C814C99B1EB095F000DDFB2D /* ZANotificationBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZANotificationBarView.m; sourceTree = "<group>"; };
+		C81D2BB61EBB1E780007410E /* ZANotificationBarContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZANotificationBarContext.h; sourceTree = "<group>"; };
+		C81D2BB71EBB1E780007410E /* ZANotificationBarContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZANotificationBarContext.m; sourceTree = "<group>"; };
+		C85445291EBADF7700E1F562 /* NSString+Character.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Character.h"; sourceTree = "<group>"; };
+		C854452A1EBADF7700E1F562 /* NSString+Character.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Character.m"; sourceTree = "<group>"; };
 		C85495661EB04F08007F1BAB /* ZANotificationBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZANotificationBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C854956A1EB04F08007F1BAB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C854956C1EB04F08007F1BAB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -155,6 +161,10 @@
 				C814C9981EB08C5A00DDFB2D /* ZANotifyAction.m */,
 				C814C99A1EB095F000DDFB2D /* ZANotificationBarView.h */,
 				C814C99B1EB095F000DDFB2D /* ZANotificationBarView.m */,
+				C85445291EBADF7700E1F562 /* NSString+Character.h */,
+				C854452A1EBADF7700E1F562 /* NSString+Character.m */,
+				C81D2BB61EBB1E780007410E /* ZANotificationBarContext.h */,
+				C81D2BB71EBB1E780007410E /* ZANotificationBarContext.m */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -322,7 +332,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C85495711EB04F08007F1BAB /* ViewController.m in Sources */,
+				C81D2BB81EBB1E780007410E /* ZANotificationBarContext.m in Sources */,
 				C85495941EB05BC4007F1BAB /* ZANotificationBar.m in Sources */,
+				C854452B1EBADF7700E1F562 /* NSString+Character.m in Sources */,
 				C854956E1EB04F08007F1BAB /* AppDelegate.m in Sources */,
 				C814C99C1EB095F000DDFB2D /* ZANotificationBarView.m in Sources */,
 				C854956B1EB04F08007F1BAB /* main.m in Sources */,
