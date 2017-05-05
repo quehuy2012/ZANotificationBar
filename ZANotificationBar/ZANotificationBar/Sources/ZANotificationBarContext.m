@@ -32,4 +32,14 @@
 - (void)addAction:(ZANotifyAction *)action {
     [self.internalActions addObject:action];
 }
+
+- (void)removeAction:(ZANotifyAction *)action {
+    [self.internalActions removeObject:action];
+}
+
+- (void)clearAction {
+    self.internalActions = [NSMutableArray array];
+}
+
+
 @end

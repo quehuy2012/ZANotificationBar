@@ -11,6 +11,7 @@
 		C814C9991EB08C5A00DDFB2D /* ZANotifyAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C814C9981EB08C5A00DDFB2D /* ZANotifyAction.m */; };
 		C814C99C1EB095F000DDFB2D /* ZANotificationBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C814C99B1EB095F000DDFB2D /* ZANotificationBarView.m */; };
 		C81D2BB81EBB1E780007410E /* ZANotificationBarContext.m in Sources */ = {isa = PBXBuildFile; fileRef = C81D2BB71EBB1E780007410E /* ZANotificationBarContext.m */; };
+		C842A94A1EBC37DE00404D21 /* UILabel+ZANotificationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C842A9491EBC37DE00404D21 /* UILabel+ZANotificationBar.m */; };
 		C854452B1EBADF7700E1F562 /* NSString+Character.m in Sources */ = {isa = PBXBuildFile; fileRef = C854452A1EBADF7700E1F562 /* NSString+Character.m */; };
 		C854956B1EB04F08007F1BAB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C854956A1EB04F08007F1BAB /* main.m */; };
 		C854956E1EB04F08007F1BAB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C854956D1EB04F08007F1BAB /* AppDelegate.m */; };
@@ -42,6 +43,8 @@
 		C814C99B1EB095F000DDFB2D /* ZANotificationBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZANotificationBarView.m; sourceTree = "<group>"; };
 		C81D2BB61EBB1E780007410E /* ZANotificationBarContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZANotificationBarContext.h; sourceTree = "<group>"; };
 		C81D2BB71EBB1E780007410E /* ZANotificationBarContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZANotificationBarContext.m; sourceTree = "<group>"; };
+		C842A9481EBC37DE00404D21 /* UILabel+ZANotificationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+ZANotificationBar.h"; sourceTree = "<group>"; };
+		C842A9491EBC37DE00404D21 /* UILabel+ZANotificationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+ZANotificationBar.m"; sourceTree = "<group>"; };
 		C85445291EBADF7700E1F562 /* NSString+Character.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Character.h"; sourceTree = "<group>"; };
 		C854452A1EBADF7700E1F562 /* NSString+Character.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Character.m"; sourceTree = "<group>"; };
 		C85495661EB04F08007F1BAB /* ZANotificationBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZANotificationBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,6 +98,17 @@
 				59312F4EB538676B1DBD7FCA /* Pods-ZANotificationBar.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		C842A9471EBC37B100404D21 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				C85445291EBADF7700E1F562 /* NSString+Character.h */,
+				C854452A1EBADF7700E1F562 /* NSString+Character.m */,
+				C842A9481EBC37DE00404D21 /* UILabel+ZANotificationBar.h */,
+				C842A9491EBC37DE00404D21 /* UILabel+ZANotificationBar.m */,
+			);
+			name = Category;
 			sourceTree = "<group>";
 		};
 		C854955D1EB04F08007F1BAB = {
@@ -155,14 +169,13 @@
 		C854958F1EB05B84007F1BAB /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				C842A9471EBC37B100404D21 /* Category */,
 				C85495921EB05BC4007F1BAB /* ZANotificationBar.h */,
 				C85495931EB05BC4007F1BAB /* ZANotificationBar.m */,
 				C814C9971EB08C5A00DDFB2D /* ZANotifyAction.h */,
 				C814C9981EB08C5A00DDFB2D /* ZANotifyAction.m */,
 				C814C99A1EB095F000DDFB2D /* ZANotificationBarView.h */,
 				C814C99B1EB095F000DDFB2D /* ZANotificationBarView.m */,
-				C85445291EBADF7700E1F562 /* NSString+Character.h */,
-				C854452A1EBADF7700E1F562 /* NSString+Character.m */,
 				C81D2BB61EBB1E780007410E /* ZANotificationBarContext.h */,
 				C81D2BB71EBB1E780007410E /* ZANotificationBarContext.m */,
 			);
@@ -337,6 +350,7 @@
 				C854452B1EBADF7700E1F562 /* NSString+Character.m in Sources */,
 				C854956E1EB04F08007F1BAB /* AppDelegate.m in Sources */,
 				C814C99C1EB095F000DDFB2D /* ZANotificationBarView.m in Sources */,
+				C842A94A1EBC37DE00404D21 /* UILabel+ZANotificationBar.m in Sources */,
 				C854956B1EB04F08007F1BAB /* main.m in Sources */,
 				C814C9991EB08C5A00DDFB2D /* ZANotifyAction.m in Sources */,
 			);

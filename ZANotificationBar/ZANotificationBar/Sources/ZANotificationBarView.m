@@ -6,10 +6,12 @@
 //  Copyright © 2017 CPU11713. All rights reserved.
 //
 
+
 #import "ZANotificationBarView.h"
 #import "ZANotifyAction.h"
 #import "ZANotificationBar.h"
-#import "Masonry.h"
+#import "ZANotificationBarContext.h"
+#import "UILabel+ZANotificationBar.h"
 #import "NSString+Character.h"
 
 @interface ZANotificationBarView ()
@@ -27,6 +29,10 @@
     NSLog(@"Dealloc view");
 }
 
++ (instancetype)context:(ZANotificationBarContext *)context {
+    return [[ZANotificationBarView alloc] initWithContext:context];
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self commonInit];
@@ -41,7 +47,15 @@
     return self;
 }
 
+- (instancetype)initWithContext:(ZANotificationBarContext *)context {
+    self = [self initWithFrame:CGRectZero];
+    _context = context;
+    return self;
+}
+
 - (void)commonInit {
+    _context = [[ZANotificationBarContext alloc] init];
+    
     _headerLabel = [[UILabel alloc] init];
     _bodyLabel = [[UILabel alloc] init];
     _appIcon = [[UIImageView alloc] init];
@@ -166,6 +180,7 @@
     
     [self setupBackgroundView];
     [self setupMainView:body];
+    [self setupNotificationActionView];
     
     // Autolayout
     [self setupDetailedNotificationBarLayout];
@@ -224,7 +239,7 @@
     
     // Message title
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = kAppName;
+    titleLabel.text = self.context.appName;
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.textColor = [UIColor grayColor];
     titleLabel.font = [UIFont systemFontOfSize:14];
@@ -263,8 +278,8 @@
     
     // AppIcon
     UIImageView *appIconImageView = [[UIImageView alloc] init];
-    if (kAppIconName.characterCount != 0) {
-        appIconImageView.image = [UIImage imageNamed:kAppIconName];
+    if (self.context.appIconName.characterCount != 0) {
+        appIconImageView.image = [UIImage imageNamed:self.context.appIconName];
     } else {
         appIconImageView.layer.borderColor = [UIColor grayColor].CGColor;
         appIconImageView.layer.borderWidth = 1.0;
@@ -294,31 +309,91 @@
         make.height.equalTo(@200).with.priorityLow();
     }];
     
+    [self.detailedBanner mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.right.equalTo(self.detailedBanner.superview);
+        make.height.greaterThanOrEqualTo(@20);
+        make.top.equalTo(self.dismissLabel.mas_bottom).with.offset(8);
+        make.bottom.lessThanOrEqualTo(self.detailedBanner.superview.mas_bottom).with.offset(30);
+    }];
+    
+    [self.notificationActionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.right.equalTo(self.notificationActionView.superview).with.offset(8);
+        make.bottom.lessThanOrEqualTo(self.notificationActionView.superview.mas_bottom).with.offset(10);
+        make.width.greaterThanOrEqualTo(@0);
+    }];
+
+    [self.messageTextView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.messageTextView.superview.mas_left).with.offset(15);
+        make.right.equalTo(self.messageTextView.superview.mas_right).with.offset(-15);
+    }]
+    
+    
     [self.toolBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.greaterThanOrEqualTo(self.mainView.mas_top).with.offset(5);
         make.bottom.equalTo(self.toolBar.superview.mas_bottom).with.priorityLow();
     }];
     
-    [self.detailedBanner mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.equalTo(self.detailedBanner.superview);
-        make.height.greaterThanOrEqualTo(@20);
-        make.top.equalTo(self.dismissLabel.mas_bottom).with.offset(8);
-        make.bottom.lessThanOrEqualTo(self.detailedBanner.superview).with.offset(30);
-    }];
+    
     
     [self.dismissLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.dismissLabel.superview.mas_top);
     }];
-}
-
-- (void)createNotificationActionView {
     
+    }
+
+- (void)setupNotificationActionView {
+    [self sortActions];
+    
+    self.notificationActionView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    self.notificationActionView.layer.cornerRadius = 14.0;
+    self.notificationActionView.clipsToBounds = YES;
+    [self.mainView addSubview:self.notificationActionView];
+    
+    UITableView *tableView = [[UITableView alloc] init];
+    tableView.backgroundColor = [UIColor clearColor];
+    tableView.dataSource = self;
+    tableView.delegate = self;
+    tableView.showsVerticalScrollIndicator = NO;
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.notificationActionView addSubview:tableView];
+    
+    CGFloat tableViewHeight = 0;
+    UILabel *messageLabel = [[UILabel alloc] init];
+    messageLabel.text = self.messageTextView.text;
+    CGFloat messageHeight = self.context.actions.count * 50 + [messageLabel heightToFit:self.messageTextView.text width:[UIApplication sharedApplication].keyWindow.frame.size.width];
+    
+    if (messageHeight > [UIApplication sharedApplication].keyWindow.frame.size.height - 50) {
+        tableView.scrollEnabled = self.context.actions.count > 4 ? YES : NO;
+        self.messageTextView.scrollEnabled = YES;
+        tableViewHeight = MIN(200, self.context.actions.count * 50);
+    } else {
+        tableView.scrollEnabled = NO;
+        tableViewHeight = self.context.actions.count * 50;
+    }
+    
+    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(tableView.superview);
+        make.height.mas_equalTo(tableViewHeight);
+    }];
 }
 
 #pragma mark - UI Event
 - (void)closeMessage:(UIButton *)sender {
+    [self.context clearAction];
+    [self.textField resignFirstResponder];
+    [UIApplication sharedApplication].keyWindow.windowLevel = 0.0;
     
+    [UIView animateWithDuration:0.5 animations:^{
+        CGRect frame = self.mainView.frame;
+        frame.origin = CGPointMake(0, [UIApplication sharedApplication].keyWindow.frame.size.height);
+        self.mainView.frame = frame;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:2.0 delay:0.5 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [self.backgroundView removeFromSuperview];
+        } completion:nil];
+    }];
 }
+
 
 #pragma mark - GestureRecognizer
 
@@ -337,17 +412,115 @@
 #pragma mark - Notification center
 
 - (void)keyboardWillShow:(NSNotification *)notification {
+    CGRect keyboardFrame = ((NSValue *)notification.userInfo[UIKeyboardFrameEndUserInfoKey]).CGRectValue;
     
+    [UIView animateWithDuration:0.1 animations:^{
+        if (self.toolBarBottomConstraint) {
+            self.toolBarBottomConstraint.offset(-keyboardFrame.size.height);
+            [self.backgroundView layoutIfNeeded];
+        }
+    }];
 }
 
 - (void)keyboardwillHide:(NSNotification *)notification {
+    CGRect keyboardFrame = ((NSValue *)notification.userInfo[UIKeyboardFrameEndUserInfoKey]).CGRectValue;
     
+    [UIView animateWithDuration:0.1 animations:^{
+        if (self.toolBarBottomConstraint) {
+            self.toolBarBottomConstraint.offset(keyboardFrame.size.height);
+            [self.backgroundView layoutIfNeeded];
+        }
+    }];
 }
 
 #pragma mark - Support
 
 - (void)sortActions {
-     
+    NSMutableArray<ZANotifyAction *> *cancelActions = [NSMutableArray array];
+    NSInteger index = 0;
+    BOOL isCancelTypeFound = NO;
+    
+    for (ZANotifyAction *action in self.context.actions) {
+        switch (action.actionType) {
+            case ZANotificationActionTypeCancel:
+                [self.context removeAction:action];
+                index -= 1;
+                if (!isCancelTypeFound) {
+                    isCancelTypeFound = YES;
+                    [cancelActions addObject:action];
+                }
+                break;
+            case ZANotificationActionTypeOnlyTextInput:
+                [self setupTextField:action senderTag:index];
+            default:
+                break;
+        }
+        index += 1;
+    }
+    if (cancelActions.count != 0) {
+        [self.context addAction:cancelActions.firstObject];
+    }
 }
+
+- (void)setupTextField:(ZANotifyAction *)action senderTag:(NSInteger)senderTag {
+    [UIView animateWithDuration:1.0 animations:^{
+        self.notificationActionView.hidden = YES;
+    } completion:^(BOOL finished) {
+        [self.notificationActionView removeFromSuperview];
+    }];
+    
+    self.textField.placeholder = action.actionTitle;
+    self.textField.font = [UIFont systemFontOfSize:14];
+    self.textField.borderStyle = UITextBorderStyleRoundedRect;
+    
+    UIButton *button = [[UIButton alloc] init];
+    button.tag = senderTag;
+    button.titleLabel.font = [UIFont systemFontOfSize:15];
+    [button setTitle:@"Send" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(closeMessage:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *textFieldBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.textField];
+    UIBarButtonItem *sendBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+    
+    self.toolBar.hidden = NO;
+    self.toolBar.items = @[textFieldBarButtonItem, sendBarButtonItem];
+    
+    [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.textField.superview.mas_left).with.offset(8);
+        make.right.equalTo(button.mas_left);
+        make.height.equalTo(@30);
+        make.top.and.bottom.equalTo(self.textField.superview).with.offset(8);
+    }];
+    
+    [button mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(button.superview.mas_right);
+        make.width.equalTo(@60);
+        make.top.and.bottom.equalTo(button.superview).width.offset(8);
+    }];
+    
+    [self.toolBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.right.equalTo(self.backgroundView);
+        self.toolBarBottomConstraint = make.bottom.equalTo(self.backgroundView.mas_bottom);
+    }];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.textField becomeFirstResponder];
+    });
+}
+
+- (void)sendButtonPressed:(UIButton *)sender {
+    ZANotifyAction *action = self.context.actions[sender.tag];
+    
+    if (!action.actionHandler) {
+        [self closeMessage:sender];
+        return;
+    }
+    
+    action.textResponse = self.textField.text;
+    action.actionHandler(action);
+    [self closeMessage:sender];
+}
+
 
 @end

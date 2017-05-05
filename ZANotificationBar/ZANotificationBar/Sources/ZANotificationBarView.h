@@ -7,10 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Masonry.h"
+
+@class ZANotificationBarContext;
 
 @interface ZANotificationBarView : UIView
 
-@property (nonatomic, readwrite) NSArray<ZANotifyAction *> *actions;
+@property (nonatomic, readwrite) ZANotificationBarContext *context;
+
+#pragma mark - Default NotficationBar Views
 
 @property (nonatomic, readwrite) UILabel *headerLabel;
 @property (nonatomic, readwrite) UILabel *bodyLabel;
@@ -19,8 +24,11 @@
 @property (nonatomic, readwrite) UIVisualEffectView *contentVisualEffectView;
 @property (nonatomic, readwrite) UIVisualEffectView *headerVisualEffectView;
 
+#pragma mark - Variable
+
 @property (nonatomic, readwrite) CGFloat dismissLabelAlpha;
 @property (nonatomic, readwrite) BOOL dismissLimitReached;
+@property (nonatomic, readwrite) MASConstraint *toolBarBottomConstraint;
 
 #pragma mark - Detailed Banner Views
 
@@ -38,5 +46,9 @@
 @property (nonatomic, readonly) UIVisualEffectView *backgroundView;
 @property (nonatomic, readonly) UIVisualEffectView *notificationActionView;
 
+
+- (instancetype)initWithContext:(ZANotificationBarContext *)context;
 - (void)didSelectMessage:(UITapGestureRecognizer *)tapGesture;
+
++ (instancetype)context:(ZANotificationBarContext *)context;
 @end

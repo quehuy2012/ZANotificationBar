@@ -122,9 +122,8 @@
     UITapGestureRecognizer *didSelectMessageTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self.notificationBar action:@selector(didSelectMessage:)];
     [self.notificationBar addGestureRecognizer:didSelectMessageTapGesture];
     
-    __weak typeof(self) weakSelf = self;
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        weakSelf.notificationBar.frame = CGRectMake(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
+        self.notificationBar.frame = CGRectMake(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
     } completion:nil];
     
     APP_DELEGATE.keyWindow.windowLevel = UIWindowLevelStatusBar + 1;

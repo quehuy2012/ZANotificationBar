@@ -69,6 +69,3 @@ typedef NS_ENUM(NSInteger, ZANotificationStyle) {
 - (void)hideNotification:(UIButton *)sender;
 
 @end
-
-extern NSString * kAppName;
-extern NSString * kAppIconName;
