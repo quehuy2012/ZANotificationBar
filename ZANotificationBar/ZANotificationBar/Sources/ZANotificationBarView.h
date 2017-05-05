@@ -52,3 +52,8 @@
 
 + (instancetype)context:(ZANotificationBarContext *)context;
 @end
+
+typedef NS_ENUM(NSInteger, PanGestureDirection) {
+    PanGestureDirectionUp = -1,
+    PanGestureDirectionDown = 1
+};

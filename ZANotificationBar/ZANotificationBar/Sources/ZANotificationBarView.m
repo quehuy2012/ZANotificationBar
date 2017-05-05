@@ -13,10 +13,17 @@
 #import "ZANotificationBarContext.h"
 #import "UILabel+ZANotificationBar.h"
 #import "NSString+Character.h"
+#import "Constants.h"
 
-@interface ZANotificationBarView ()
+@interface ZANotificationBarView () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, readwrite) UIView *detailedBanner;
+@property (nonatomic, readwrite) UILabel *titleLabel;
+@property (nonatomic, readwrite) UIView *separatorView;
+@property (nonatomic, readwrite) UIButton *closeButton;
+@property (nonatomic, readwrite) UIImageView *detailedBannerAppIconImageView;
+
+@property (nonatomic, readwrite) UIPanGestureRecognizer *panGesture;
 
 @end
 
@@ -72,6 +79,11 @@
     _notificationActionView = [[UIVisualEffectView alloc] init];
     _backgroundView = [[UIVisualEffectView alloc] init];
     _detailedBanner = [[UIView alloc] init];
+    
+    _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    [self addGestureRecognizer:_panGesture];
+    
+    self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     [self setupNotificationBar];
     
@@ -238,13 +250,13 @@
     [self.mainView addSubview:self.detailedBanner];
     
     // Message title
-    UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = self.context.appName;
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [UIColor grayColor];
-    titleLabel.font = [UIFont systemFontOfSize:14];
+    self.titleLabel = [[UILabel alloc] init];
+    self.titleLabel.text = self.context.appName;
+    self.titleLabel.backgroundColor = [UIColor clearColor];
+    self.titleLabel.textColor = [UIColor grayColor];
+    self.titleLabel.font = [UIFont systemFontOfSize:14];
     
-    [self.detailedBanner addSubview:titleLabel];
+    [self.detailedBanner addSubview:self.titleLabel];
     
     // Message body
     NSArray<NSString *> *tempContainer = [body componentsSeparatedByString:@"\n"];
@@ -271,31 +283,31 @@
     [self.detailedBanner addSubview:self.messageTextView];
     
     // Separator Line
-    UIView *separatorView = [[UIView alloc] init];
-    separatorView.backgroundColor = [UIColor lightGrayColor];
+    self.separatorView = [[UIView alloc] init];
+    self.separatorView.backgroundColor = [UIColor lightGrayColor];
     
-    [self.detailedBanner addSubview:separatorView];
+    [self.detailedBanner addSubview:self.separatorView];
     
     // AppIcon
-    UIImageView *appIconImageView = [[UIImageView alloc] init];
+    self.detailedBannerAppIconImageView = [[UIImageView alloc] init];
     if (self.context.appIconName.characterCount != 0) {
-        appIconImageView.image = [UIImage imageNamed:self.context.appIconName];
+        self.detailedBannerAppIconImageView.image = [UIImage imageNamed:self.context.appIconName];
     } else {
-        appIconImageView.layer.borderColor = [UIColor grayColor].CGColor;
-        appIconImageView.layer.borderWidth = 1.0;
+        self.detailedBannerAppIconImageView.layer.borderColor = [UIColor grayColor].CGColor;
+        self.detailedBannerAppIconImageView.layer.borderWidth = 1.0;
     }
     
-    appIconImageView.layer.cornerRadius = 5.0;
-    appIconImageView.clipsToBounds = YES;
+    self.detailedBannerAppIconImageView.layer.cornerRadius = 5.0;
+    self.detailedBannerAppIconImageView.clipsToBounds = YES;
     
-    [self.detailedBanner addSubview:appIconImageView];
+    [self.detailedBanner addSubview:self.detailedBannerAppIconImageView];
     
     // Close Button
-    UIButton *closeButton = [[UIButton alloc] init];
-    [closeButton setImage:[UIImage imageNamed:@"Close.png"] forState:UIControlStateNormal];
-    [closeButton addTarget:self action:@selector(closeMessage:) forControlEvents:UIControlEventTouchUpInside];
+    self.closeButton = [[UIButton alloc] init];
+    [self.closeButton setImage:[UIImage imageNamed:@"Close.png"] forState:UIControlStateNormal];
+    [self.closeButton addTarget:self action:@selector(closeMessage:) forControlEvents:UIControlEventTouchUpInside];
     
-    [self.detailedBanner addSubview:closeButton];
+    [self.detailedBanner addSubview:self.closeButton];
 }
 
 - (void)setupDetailedNotificationBarLayout {
@@ -322,24 +334,69 @@
         make.width.greaterThanOrEqualTo(@0);
     }];
 
+#warning
+    UILabel *messageLabel = [[UILabel alloc] init];
+    messageLabel.text = self.messageTextView.text;
+    CGFloat expectedContentHeight = self.context.actions.count * 50 + [messageLabel heightToFit:messageLabel.text width:[UIApplication sharedApplication].keyWindow.frame.size.width];
+    CGFloat messageHeight;
+    NSInteger priority;
+    if (expectedContentHeight > [UIApplication sharedApplication].keyWindow.frame.size.height - 50) {
+        messageHeight = [UIApplication sharedApplication].keyWindow.frame.size.height - self.context.actions.count < 4 ? self.context.actions.count * 50 : 200;
+        priority = 750;
+    } else {
+        messageHeight = 30;
+        priority = 250;
+    }
+    
     [self.messageTextView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.messageTextView.superview.mas_left).with.offset(15);
         make.right.equalTo(self.messageTextView.superview.mas_right).with.offset(-15);
-    }]
+        make.top.equalTo(self.separatorView.mas_bottom).with.offset(8);
+        make.bottom.lessThanOrEqualTo(self.messageTextView.superview.mas_bottom).with.offset(-5);
+        make.height.mas_equalTo(messageHeight).with.priority(priority);
+    }];
     
+    [self.self.detailedBannerAppIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.self.detailedBannerAppIconImageView.superview.mas_left).with.offset(10);
+        make.top.equalTo(self.self.detailedBannerAppIconImageView.superview.mas_top).with.offset(15);
+        make.width.and.height.equalTo(@20);
+    }];
     
-    [self.toolBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.greaterThanOrEqualTo(self.mainView.mas_top).with.offset(5);
-        make.bottom.equalTo(self.toolBar.superview.mas_bottom).with.priorityLow();
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.self.detailedBannerAppIconImageView.mas_right).with.offset(10);
+        make.right.equalTo(self.closeButton.mas_left).with.offset(-10);
+        make.top.equalTo(self.titleLabel.superview.mas_top).with.offset(15);
+        make.height.equalTo(@20);
     }];
     
     
+    [self.separatorView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.separatorView.superview.mas_left).with.offset(8);
+        make.right.equalTo(self.separatorView.superview.mas_right).with.offset(-8);
+        make.height.equalTo(@1);
+        make.top.equalTo(self.titleLabel.mas_bottom).with.offset(8);
+    }];
+    
+    [self.closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.closeButton.superview.mas_right).with.offset(10);
+        make.top.equalTo(self.closeButton.superview.mas_top).with.offset(15);
+        make.width.equalTo(@30);
+        make.height.equalTo(@20);
+    }];
     
     [self.dismissLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.dismissLabel.superview.mas_left).with.offset(8);
+        make.right.equalTo(self.dismissLabel.superview.mas_right).with.offset(-8);
         make.top.equalTo(self.dismissLabel.superview.mas_top);
     }];
     
-    }
+    [self.toolBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.right.equalTo(self.toolBar.superview);
+        
+        make.top.greaterThanOrEqualTo(self.mainView.mas_bottom).with.offset(5);
+        make.bottom.equalTo(self.toolBar.superview.mas_bottom).priorityLow();
+    }];
+}
 
 - (void)setupNotificationActionView {
     [self sortActions];
@@ -398,15 +455,178 @@
 #pragma mark - GestureRecognizer
 
 - (void)didSelectMessage:(UITapGestureRecognizer *)tapGesture {
+    [UIView animateWithDuration:0.5 animations:^{
+        CGRect frame = self.frame;
+        frame.origin = CGPointMake(0, -BAR_HEIGHT);
+        self.frame = frame;
+    } completion:^(BOOL finished) {
+        [self removeFromSuperview];
+    }];
     
+    [self closeMessage:nil];
+    self.context.didSelectHandler(true);
 }
 
 - (void)tapToClose:(UITapGestureRecognizer *)tapGesture {
+    [self closeMessage:nil];
+}
+
+- (void)handlePanGesture:(UIPanGestureRecognizer *)panGesture {
+    CGPoint velocity = [panGesture velocityInView:self];
+    CGPoint translation = [panGesture translationInView:self];
     
+    UIView *target = panGesture.view;
+    
+    switch (panGesture.state) {
+        case UIGestureRecognizerStateBegan:
+        case UIGestureRecognizerStateChanged: {
+            
+            PanGestureDirection direction = velocity.y < 1.0 ? PanGestureDirectionUp : PanGestureDirectionDown;
+            
+            switch (direction) {
+                case PanGestureDirectionUp:
+                    target.center = CGPointMake(target.center.x, target.center.y + translation.y);
+                    break;
+                case PanGestureDirectionDown:
+                    if (self.context.showNotificationInDetail) {
+                        target.center = CGPointMake(target.center.x, target.center.y + translation.y);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            
+            [panGesture setTranslation:CGPointMake(0, 0) inView:self];
+            
+            if (target.frame.origin.y > target.frame.size.height) {
+                [self removeFromSuperview];
+                [self setupDetailedNotificationBarWithHeader:self.headerLabel.text body:self.bodyLabel.text actions:@[]];
+                return;
+            }
+            
+            break;
+        }
+        case UIGestureRecognizerStateEnded: {
+            if (target.frame.origin.y < -(self.contentVisualEffectView.frame.origin.y)) {
+                APP_DELEGATE.keyWindow.windowLevel = 0.0;
+                [self.context clearAction];
+                [self removeFromSuperview];
+                return;
+            }
+            
+            [UIView animateWithDuration:0.5 animations:^{
+                CGRect frame = target.frame;
+                frame.origin = CGPointMake(target.frame.origin.x, 10);
+                target.frame = frame;
+            }];
+            
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 - (void)handleDetailedPanGesture:(UIPanGestureRecognizer *)panGesture {
+    BOOL isLandScape = NO;
+    CGPoint translation = [panGesture translationInView:self];
+    CGPoint velocity = [panGesture velocityInView:self];
+    CGFloat panVelocity;
     
+    [panGesture setTranslation:CGPointMake(0, 0) inView:self];
+    
+    switch (panGesture.state) {
+        case UIGestureRecognizerStateBegan:
+        case UIGestureRecognizerStateChanged: {
+            UIInterfaceOrientation orientation = APP_DELEGATE.statusBarOrientation;
+            
+            switch (orientation) {
+                case UIInterfaceOrientationPortrait:
+                    self.mainView.center = CGPointMake(self.mainView.center.x, self.mainView.center.y + translation.y / 5);
+                    panVelocity = velocity.y;
+                    break;
+                case UIInterfaceOrientationLandscapeLeft:
+                    self.mainView.center = CGPointMake(self.mainView.center.x, self.mainView.center.y + translation.x / 5);
+                    panVelocity = velocity.x;
+                    isLandScape = YES;
+                    break;
+                case UIInterfaceOrientationLandscapeRight:
+                    self.mainView.center = CGPointMake(self.mainView.center.x, self.mainView.center.y + (-translation.x / 5));
+                    panVelocity = -velocity.x;
+                    isLandScape = YES;
+                    break;
+                default:
+                    break;
+            }
+            
+            PanGestureDirection direction = panVelocity < 1.0 ? PanGestureDirectionUp : PanGestureDirectionDown;
+            
+            switch (direction) {
+                case PanGestureDirectionUp:
+                    if (self.dismissLabel.alpha > 0.0) {
+                        self.dismissLabelAlpha -= isLandScape ? 0.05 : 0.02;
+                    } else if (self.dismissLabel.alpha <= 1.0 && self.dismissLimitReached) {
+                        self.dismissLimitReached = NO;
+                    }
+                    
+                    if (panVelocity > -1500) {
+                        self.dismissLimitReached = NO;
+                        self.dismissLabel.alpha = 0.0;
+                    }
+                    
+                    break;
+                case PanGestureDirectionDown:
+                    if (self.dismissLabel.alpha < 1.0) {
+                        self.dismissLabelAlpha += isLandScape ? 0.05: 0.02;
+                    } else if (self.dismissLabel.alpha >= 1.0 && !self.dismissLimitReached) {
+                        self.dismissLimitReached = YES;
+                        self.dismissLabel.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.0, 0.0);
+                        
+                        __weak typeof(self) weakSelf = self;
+                        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+                            weakSelf.dismissLabel.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.3, 1.3);
+                        } completion:^(BOOL finished) {
+                            [UIView animateWithDuration:0.15 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                                self.dismissLabel.transform = CGAffineTransformIdentity;
+                            } completion:nil];
+                        }];
+                    }
+                    
+                    if (panVelocity > 2000) {
+                        self.dismissLimitReached = YES;
+                        self.dismissLabelAlpha = 1.0;
+                    }
+                    
+                    break;
+                default:
+                    break;
+            }
+            
+            self.dismissLabel.alpha = self.dismissLabelAlpha;
+            
+            break;
+        }
+        case UIGestureRecognizerStateEnded: {
+            if (self.dismissLimitReached) {
+                [self setCloseButton:nil];
+                return;
+            }
+            
+            [UIView animateWithDuration:0.5 animations:^{
+                CGRect frame = self.mainView.frame;
+                frame.origin = CGPointMake(0, 0);
+                self.mainView.frame = frame;
+            }];
+            
+            self.dismissLimitReached = NO;
+            self.dismissLabel.alpha = 0.0;
+            self.dismissLabelAlpha = 0.0;
+            
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 #pragma mark - Notification center
@@ -435,6 +655,10 @@
 
 #pragma mark - Support
 
+/**
+ sort `GLNotifyAction` which have style ZANotificationActionTypeCancel to last index
+ @note If multi ZANotificationActionTypeCancel is found, just only first `ZANotificationActionTypeCancel`  sort to last index, other `ZANotificationActionTypeCancel` will be removed.
+ */
 - (void)sortActions {
     NSMutableArray<ZANotifyAction *> *cancelActions = [NSMutableArray array];
     NSInteger index = 0;
@@ -522,5 +746,73 @@
     [self closeMessage:sender];
 }
 
+#pragma mark - UIGestureRecognizerDelegate
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    if ([touch.view isDescendantOfView:self.notificationActionView]) {
+        return NO;
+    }
+    return YES;
+}
+
+#pragma mark - UITableViewDataSource
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.context.actions.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ZANotifyActionViewCell"];
+    cell.backgroundColor = [UIColor clearColor];
+    
+    // Add separator line
+    CALayer *layer = [[CALayer alloc] init];
+    layer.borderColor = [UIColor grayColor].CGColor;
+    layer.borderWidth = 0.75;
+    
+    CGFloat width = MAX(APP_DELEGATE.keyWindow.frame.size.height, APP_DELEGATE.keyWindow.frame.size.width);
+    layer.frame = CGRectMake(0, 49, width, 2);
+    
+    [cell.layer addSublayer:layer];
+    cell.layer.masksToBounds = YES;
+    
+    ZANotifyAction *action = self.context.actions[indexPath.row];
+    switch (action.actionType) {
+        case ZANotificationActionTypeCancel:
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:20];
+            break;
+        case ZANotificationActionTypeDestructive:
+            cell.textLabel.textColor = [UIColor redColor];
+            break;
+        default:
+            break;
+    }
+    
+    cell.textLabel.text = self.context.actions[indexPath.row].actionTitle;
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    ZANotifyAction *action = self.context.actions[indexPath.row];
+    switch (action.actionType) {
+        case ZANotificationActionTypeCancel:
+        case ZANotificationActionTypeDestructive:
+        case ZANotificationActionTypeDefault:
+            if (action.actionHandler) {
+                action.actionHandler(action);
+            }
+            [self closeMessage:nil];
+            break;
+        case ZANotificationActionTypeTextInput:
+            [self setupTextField:action senderTag:indexPath.row];
+        default:
+            break;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 50;
+}
 @end

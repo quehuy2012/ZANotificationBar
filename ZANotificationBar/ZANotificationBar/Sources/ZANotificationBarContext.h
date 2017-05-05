@@ -17,15 +17,13 @@
 @property (nonatomic, readwrite) NSString *appName;
 @property (nonatomic, readwrite) NSString *appIconName;
 
+@property (nonatomic, copy) void (^didSelectHandler)(BOOL);
+
 @property (nonatomic, readonly) NSArray<ZANotifyAction *> *actions;
 
 - (void)addAction:(ZANotifyAction *)action;
 - (void)removeAction:(ZANotifyAction *)action;
 - (void)clearAction;
 
-/**
- sort `GLNotifyAction` which have style ZANotificationActionTypeCancel to last index 
- @note If multi ZANotificationActionTypeCancel is found, just only first `ZANotificationActionTypeCancel`  sort to last index, other `ZANotificationActionTypeCancel` will be removed.
- */
-- (void)sortActions;
+
 @end

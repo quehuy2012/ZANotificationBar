@@ -7,6 +7,7 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
+#import "Constants.h"
 #import "Masonry.h"
 #import "ZANotificationBar.h"
 #import "ZANotificationBarView.h"
@@ -14,9 +15,7 @@
 #import "ZANotifyAction.h"
 #import "NSString+Character.h"
 
-#define WINDOW_WIDTH [UIApplication sharedApplication].keyWindow.bounds.size.width
-#define APP_DELEGATE [UIApplication sharedApplication]
-#define BAR_HEIGHT 100
+
 
 @interface ZANotificationBar ()
 
@@ -36,10 +35,9 @@
                preferredStyle:(ZANotificationStyle)preferredStyle
                       handler:(void (^)(BOOL))handler {
     if (self = [super init]) {
-        _handler = handler;
         _displayDuration = 5.0;
         _context = [[ZANotificationBarContext alloc] init];
-        
+        _context.didSelectHandler = handler;
         
         if (APP_DELEGATE.keyWindow.subviews) {
             [self setUpNotificationBarWithHeader:header body:body notificationStyle:preferredStyle];

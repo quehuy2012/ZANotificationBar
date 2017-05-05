@@ -45,6 +45,7 @@
 		C81D2BB71EBB1E780007410E /* ZANotificationBarContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZANotificationBarContext.m; sourceTree = "<group>"; };
 		C842A9481EBC37DE00404D21 /* UILabel+ZANotificationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+ZANotificationBar.h"; sourceTree = "<group>"; };
 		C842A9491EBC37DE00404D21 /* UILabel+ZANotificationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+ZANotificationBar.m"; sourceTree = "<group>"; };
+		C842A94B1EBC6AE000404D21 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		C85445291EBADF7700E1F562 /* NSString+Character.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Character.h"; sourceTree = "<group>"; };
 		C854452A1EBADF7700E1F562 /* NSString+Character.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Character.m"; sourceTree = "<group>"; };
 		C85495661EB04F08007F1BAB /* ZANotificationBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZANotificationBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -178,6 +179,7 @@
 				C814C99B1EB095F000DDFB2D /* ZANotificationBarView.m */,
 				C81D2BB61EBB1E780007410E /* ZANotificationBarContext.h */,
 				C81D2BB71EBB1E780007410E /* ZANotificationBarContext.m */,
+				C842A94B1EBC6AE000404D21 /* Constants.h */,
 			);
 			path = Sources;
 			sourceTree = "<group>";

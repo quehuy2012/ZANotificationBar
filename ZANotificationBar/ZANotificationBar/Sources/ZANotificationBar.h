@@ -34,8 +34,6 @@ typedef NS_ENUM(NSInteger, ZANotificationStyle) {
  */
 @property (nonatomic, readwrite) double displayDuration;
 
-@property (nonatomic, copy) void (^handler)(BOOL);
-
 @property (nonatomic, readwrite) ZANotificationBarView *notificationBar;
 
 @property (nonatomic, readwrite) ZANotificationBarContext *context;
