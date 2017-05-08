@@ -9,7 +9,7 @@
 
 #import "ZANotificationBarView.h"
 #import "ZANotifyAction.h"
-#import "ZANotificationBar.h"
+#import "ZANotificationBarController.h"
 #import "ZANotificationBarContext.h"
 #import "UILabel+ZANotificationBar.h"
 #import "NSString+Character.h"
@@ -22,6 +22,7 @@
 @property (nonatomic, readwrite) UIView *separatorView;
 @property (nonatomic, readwrite) UIButton *closeButton;
 @property (nonatomic, readwrite) UIImageView *detailedBannerAppIconImageView;
+@property (nonatomic, readwrite) UITableView *actionsTableView;
 
 @property (nonatomic, readwrite) UIPanGestureRecognizer *panGesture;
 
@@ -83,9 +84,11 @@
     _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     [self addGestureRecognizer:_panGesture];
     
+    [self setupNotificationBar];
+    
     self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
-    [self setupNotificationBar];
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardwillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -185,14 +188,17 @@
 - (void)setupDetailedNotificationBarWithHeader:(NSString *)header
                                           body:(NSString *)body
                                        actions:(NSArray<ZANotifyAction *> *)actions {
-    [self.backgroundView addSubview:self.mainView];
-    
     self.notificationStyleIndicator.layer.cornerRadius = 3.0;
     self.notificationStyleIndicator.alpha = 0.5;
     
     [self setupBackgroundView];
     [self setupMainView:body];
     [self setupNotificationActionView];
+    
+    [[UIApplication sharedApplication].keyWindow addSubview:self.backgroundView];
+    
+    self.toolBar.hidden = YES;
+    [self.backgroundView addSubview:self.toolBar];
     
     // Autolayout
     [self setupDetailedNotificationBarLayout];
@@ -212,20 +218,37 @@
 - (void)setupBackgroundView {
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didSelectMessage:)];
     UITapGestureRecognizer *tapToCloseGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToClose:)];
+    tapToCloseGesture.delegate = self;
     
     [self.backgroundView addGestureRecognizer:panGesture];
     [self.backgroundView addGestureRecognizer:tapToCloseGesture];
     self.backgroundView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-    self.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    //self.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    [[UIApplication sharedApplication].keyWindow addSubview:self.backgroundView];
     
-    self.toolBar.hidden = YES;
-    [self.backgroundView addSubview:self.toolBar];
 }
 
 - (void)setupMainView:(NSString *)body {
+    //[self.backgroundView addSubview:self.mainView];
+    
     self.mainView.backgroundColor = [UIColor clearColor];
+    
+    // Notification banner
+    self.detailedBanner = [[UIView alloc] init];
+    self.detailedBanner.backgroundColor = [UIColor whiteColor];
+    self.detailedBanner.layer.cornerRadius = 14.0;
+    self.detailedBanner.clipsToBounds = YES;
+    
+    
+    
+    UITapGestureRecognizer *selectMessageGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didSelectMessage:)];
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDetailedPanGesture:)];
+    [self.detailedBanner addGestureRecognizer:selectMessageGesture];
+    [self.detailedBanner addGestureRecognizer:panGesture];
+    
+    [self.mainView addSubview:self.detailedBanner];
+    
+    [self.backgroundView addSubview:self.mainView];
     
     // Dismiss label
     self.dismissLabel.text = @"DISMISS";
@@ -235,19 +258,6 @@
     self.dismissLabel.alpha = 0.0;
     
     [self.mainView addSubview:self.dismissLabel];
-    
-    // Notification banner
-    
-    self.detailedBanner.backgroundColor = [UIColor whiteColor];
-    self.detailedBanner.layer.cornerRadius = 14.0;
-    self.detailedBanner.clipsToBounds = YES;
-    
-    UITapGestureRecognizer *selectMessageGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didSelectMessage:)];
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDetailedPanGesture:)];
-    [self.detailedBanner addGestureRecognizer:selectMessageGesture];
-    [self.detailedBanner addGestureRecognizer:panGesture];
-    
-    [self.mainView addSubview:self.detailedBanner];
     
     // Message title
     self.titleLabel = [[UILabel alloc] init];
@@ -263,12 +273,12 @@
     NSString *rangeStr = tempContainer.firstObject;
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:body];
     if ([body containsString:@"\n"]) {
-        [attributeString addAttributes:@{ NSFontAttributeName : [UIFont boldSystemFontOfSize:15] }
+        [attributeString addAttributes:@{ NSFontAttributeName : [UIFont boldSystemFontOfSize:13] }
                                  range:NSMakeRange(0, [rangeStr characterCount])];
-        [attributeString addAttributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:15] }
-                                 range:NSMakeRange([rangeStr characterCount], tempContainer[1].characterCount)];
+        [attributeString addAttributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:13] }
+                                 range:NSMakeRange([rangeStr characterCount], [tempContainer[1]characterCount])];
     } else {
-        [attributeString addAttributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:15] }
+        [attributeString addAttributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:13] }
                                  range:NSMakeRange(0, body.characterCount)];
     }
     
@@ -316,22 +326,28 @@
     }];
     
     [self.mainView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.and.top.equalTo(self.mainView.superview);
-        make.bottom.lessThanOrEqualTo(self.mainView.superview.mas_bottom).with.offset(10);
+        make.left.equalTo(self.mainView.superview).with.offset(16);
+        make.right.equalTo(self.mainView.superview).with.offset(-16);
+        make.top.equalTo(self.mainView.superview).with.offset(20);
+        make.bottom.lessThanOrEqualTo(self.mainView.superview.mas_bottom).with.offset(-10);
         make.height.equalTo(@200).with.priorityLow();
     }];
     
     [self.detailedBanner mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.equalTo(self.detailedBanner.superview);
-        make.height.greaterThanOrEqualTo(@20);
+        make.left.equalTo(self.detailedBanner.superview.mas_left).with.offset(8);
+        make.right.equalTo(self.detailedBanner.superview.mas_right).with.offset(-8);
         make.top.equalTo(self.dismissLabel.mas_bottom).with.offset(8);
-        make.bottom.lessThanOrEqualTo(self.detailedBanner.superview.mas_bottom).with.offset(30);
+        make.bottom.lessThanOrEqualTo(self.detailedBanner.superview.mas_bottom).with.offset(-30);
+        
+        make.height.greaterThanOrEqualTo(@20);
     }];
     
     [self.notificationActionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.equalTo(self.notificationActionView.superview).with.offset(8);
-        make.bottom.lessThanOrEqualTo(self.notificationActionView.superview.mas_bottom).with.offset(10);
-        make.width.greaterThanOrEqualTo(@0);
+        make.left.equalTo(self.notificationActionView.superview.mas_left).with.offset(8);
+        make.right.equalTo(self.notificationActionView.superview.mas_right).with.offset(-8);
+        make.top.equalTo(self.detailedBanner.mas_bottom).with.offset(10);
+        make.bottom.lessThanOrEqualTo(self.notificationActionView.superview.mas_bottom).with.offset(-10);
+        make.height.greaterThanOrEqualTo(@0);
     }];
 
 #warning
@@ -340,7 +356,7 @@
     CGFloat expectedContentHeight = self.context.actions.count * 50 + [messageLabel heightToFit:messageLabel.text width:[UIApplication sharedApplication].keyWindow.frame.size.width];
     CGFloat messageHeight;
     NSInteger priority;
-    if (expectedContentHeight > [UIApplication sharedApplication].keyWindow.frame.size.height - 50) {
+    if (expectedContentHeight > ([UIApplication sharedApplication].keyWindow.frame.size.height - 50)) {
         messageHeight = [UIApplication sharedApplication].keyWindow.frame.size.height - self.context.actions.count < 4 ? self.context.actions.count * 50 : 200;
         priority = 750;
     } else {
@@ -353,17 +369,18 @@
         make.right.equalTo(self.messageTextView.superview.mas_right).with.offset(-15);
         make.top.equalTo(self.separatorView.mas_bottom).with.offset(8);
         make.bottom.lessThanOrEqualTo(self.messageTextView.superview.mas_bottom).with.offset(-5);
+        
         make.height.mas_equalTo(messageHeight).with.priority(priority);
     }];
     
     [self.self.detailedBannerAppIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.self.detailedBannerAppIconImageView.superview.mas_left).with.offset(10);
-        make.top.equalTo(self.self.detailedBannerAppIconImageView.superview.mas_top).with.offset(15);
+        make.left.equalTo(self.detailedBannerAppIconImageView.superview.mas_left).with.offset(10);
+        make.top.equalTo(self.detailedBannerAppIconImageView.superview.mas_top).with.offset(15);
         make.width.and.height.equalTo(@20);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.self.detailedBannerAppIconImageView.mas_right).with.offset(10);
+        make.left.equalTo(self.detailedBannerAppIconImageView.mas_right).with.offset(10);
         make.right.equalTo(self.closeButton.mas_left).with.offset(-10);
         make.top.equalTo(self.titleLabel.superview.mas_top).with.offset(15);
         make.height.equalTo(@20);
@@ -378,15 +395,15 @@
     }];
     
     [self.closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.closeButton.superview.mas_right).with.offset(10);
+        make.right.equalTo(self.closeButton.superview.mas_right).with.offset(-10);
         make.top.equalTo(self.closeButton.superview.mas_top).with.offset(15);
         make.width.equalTo(@30);
         make.height.equalTo(@20);
     }];
     
     [self.dismissLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.dismissLabel.superview.mas_left).with.offset(8);
-        make.right.equalTo(self.dismissLabel.superview.mas_right).with.offset(-8);
+        make.left.equalTo(self.dismissLabel.superview.mas_left).with.offset(15);
+        make.right.equalTo(self.dismissLabel.superview.mas_right).with.offset(-15);
         make.top.equalTo(self.dismissLabel.superview.mas_top);
     }];
     
@@ -396,6 +413,32 @@
         make.top.greaterThanOrEqualTo(self.mainView.mas_bottom).with.offset(5);
         make.bottom.equalTo(self.toolBar.superview.mas_bottom).priorityLow();
     }];
+    
+    
+    CGFloat tableViewHeight = 0;
+    UILabel *testLabel = [[UILabel alloc] init];
+    testLabel.text = self.messageTextView.text;
+    CGFloat test = self.context.actions.count * 50 + [testLabel heightToFit:self.messageTextView.text width:[UIApplication sharedApplication].keyWindow.frame.size.width];
+    
+    if (test > [UIApplication sharedApplication].keyWindow.frame.size.height - 50) {
+        self.actionsTableView.scrollEnabled = self.context.actions.count > 4 ? YES : NO;
+        self.messageTextView.scrollEnabled = YES;
+        tableViewHeight = MIN(200, self.context.actions.count * 50);
+    } else {
+        self.actionsTableView.scrollEnabled = NO;
+        tableViewHeight = self.context.actions.count * 50;
+    }
+    
+    NSLog(@"Table view height:%f", tableViewHeight);
+
+    
+    [self.actionsTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.equalTo(self.actionsTableView.superview);
+        make.bottom.lessThanOrEqualTo(self.actionsTableView.superview);
+        make.height.mas_equalTo(tableViewHeight).with.priorityHigh();
+    }];
+    
+    [self.actionsTableView reloadData];
 }
 
 - (void)setupNotificationActionView {
@@ -406,32 +449,13 @@
     self.notificationActionView.clipsToBounds = YES;
     [self.mainView addSubview:self.notificationActionView];
     
-    UITableView *tableView = [[UITableView alloc] init];
-    tableView.backgroundColor = [UIColor clearColor];
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    tableView.showsVerticalScrollIndicator = NO;
-    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.notificationActionView addSubview:tableView];
-    
-    CGFloat tableViewHeight = 0;
-    UILabel *messageLabel = [[UILabel alloc] init];
-    messageLabel.text = self.messageTextView.text;
-    CGFloat messageHeight = self.context.actions.count * 50 + [messageLabel heightToFit:self.messageTextView.text width:[UIApplication sharedApplication].keyWindow.frame.size.width];
-    
-    if (messageHeight > [UIApplication sharedApplication].keyWindow.frame.size.height - 50) {
-        tableView.scrollEnabled = self.context.actions.count > 4 ? YES : NO;
-        self.messageTextView.scrollEnabled = YES;
-        tableViewHeight = MIN(200, self.context.actions.count * 50);
-    } else {
-        tableView.scrollEnabled = NO;
-        tableViewHeight = self.context.actions.count * 50;
-    }
-    
-    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(tableView.superview);
-        make.height.mas_equalTo(tableViewHeight);
-    }];
+    self.actionsTableView = [[UITableView alloc] init];
+    self.actionsTableView.backgroundColor = [UIColor clearColor];
+    self.actionsTableView.dataSource = self;
+    self.actionsTableView.delegate = self;
+    self.actionsTableView.showsVerticalScrollIndicator = NO;
+    self.actionsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.notificationActionView addSubview:self.actionsTableView];
 }
 
 #pragma mark - UI Event
@@ -676,6 +700,7 @@
                 break;
             case ZANotificationActionTypeOnlyTextInput:
                 [self setupTextField:action senderTag:index];
+                continue;
             default:
                 break;
         }
@@ -759,6 +784,7 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSLog(@"Number of row: %d", self.context.actions.count);
     return self.context.actions.count;
 }
 

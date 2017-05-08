@@ -9,7 +9,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "Constants.h"
 #import "Masonry.h"
-#import "ZANotificationBar.h"
+#import "ZANotificationBarController.h"
 #import "ZANotificationBarView.h"
 #import "ZANotificationBarContext.h"
 #import "ZANotifyAction.h"
@@ -17,7 +17,7 @@
 
 
 
-@interface ZANotificationBar ()
+@interface ZANotificationBarController ()
 
 @property (nonatomic, readwrite) CGFloat height;
 
@@ -26,12 +26,12 @@
 @end
 
 
-@implementation ZANotificationBar
+@implementation ZANotificationBarController
 
 #pragma mark - Init
 
-- (instancetype)initWithHeader:(NSString *)header
-                          body:(NSString *)body
+- (instancetype)initWithTitle:(NSString *)title
+                        message:(NSString *)message
                preferredStyle:(ZANotificationStyle)preferredStyle
                       handler:(void (^)(BOOL))handler {
     if (self = [super init]) {
@@ -40,11 +40,11 @@
         _context.didSelectHandler = handler;
         
         if (APP_DELEGATE.keyWindow.subviews) {
-            [self setUpNotificationBarWithHeader:header body:body notificationStyle:preferredStyle];
+            [self setUpNotificationBarWithHeader:title body:message notificationStyle:preferredStyle];
         }
         else {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self setUpNotificationBarWithHeader:header body:body notificationStyle:preferredStyle];
+                [self setUpNotificationBarWithHeader:title body:message notificationStyle:preferredStyle];
             });
         }
         
@@ -71,7 +71,7 @@
     }
     
     CGRect frame = CGRectMake(0, -BAR_HEIGHT, WINDOW_WIDTH, BAR_HEIGHT);
-    self.notificationBar = [[ZANotificationBarView alloc] initWithFrame:frame];
+    self.notificationBar = [[ZANotificationBarView alloc] initWithContext:self.context];
     self.notificationBar.translatesAutoresizingMaskIntoConstraints = NO;
     
     switch (notificationStyle) {
@@ -135,7 +135,7 @@
 
 #pragma mark - Publics
 
-- (void)notoficationSoundFromName:(NSString *)name ofType:(NSString *)type vibrate:(BOOL)vibrate {
+- (void)notificationSoundWithName:(NSString *)name ofType:(NSString *)type vibrate:(BOOL)vibrate {
     if (vibrate) {
         AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
     }

@@ -20,7 +20,7 @@
 		C85495761EB04F08007F1BAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C85495751EB04F08007F1BAB /* Assets.xcassets */; };
 		C85495791EB04F08007F1BAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C85495771EB04F08007F1BAB /* LaunchScreen.storyboard */; };
 		C85495841EB04F08007F1BAB /* ZANotificationBarTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C85495831EB04F08007F1BAB /* ZANotificationBarTests.m */; };
-		C85495941EB05BC4007F1BAB /* ZANotificationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C85495931EB05BC4007F1BAB /* ZANotificationBar.m */; };
+		C85495941EB05BC4007F1BAB /* ZANotificationBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = C85495931EB05BC4007F1BAB /* ZANotificationBarController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +37,7 @@
 		0F946C90BAC0B64AF92C162E /* Pods-ZANotificationBar.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZANotificationBar.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZANotificationBar/Pods-ZANotificationBar.debug.xcconfig"; sourceTree = "<group>"; };
 		5361CBF7363243C56A34FA0C /* Pods_ZANotificationBar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZANotificationBar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		59312F4EB538676B1DBD7FCA /* Pods-ZANotificationBar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZANotificationBar.release.xcconfig"; path = "Pods/Target Support Files/Pods-ZANotificationBar/Pods-ZANotificationBar.release.xcconfig"; sourceTree = "<group>"; };
+		C812C5941EC0279E00EBE71E /* ZANotificationBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZANotificationBar.h; sourceTree = "<group>"; };
 		C814C9971EB08C5A00DDFB2D /* ZANotifyAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZANotifyAction.h; sourceTree = "<group>"; };
 		C814C9981EB08C5A00DDFB2D /* ZANotifyAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZANotifyAction.m; sourceTree = "<group>"; };
 		C814C99A1EB095F000DDFB2D /* ZANotificationBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZANotificationBarView.h; sourceTree = "<group>"; };
@@ -61,8 +62,8 @@
 		C854957F1EB04F08007F1BAB /* ZANotificationBarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZANotificationBarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C85495831EB04F08007F1BAB /* ZANotificationBarTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZANotificationBarTests.m; sourceTree = "<group>"; };
 		C85495851EB04F08007F1BAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C85495921EB05BC4007F1BAB /* ZANotificationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZANotificationBar.h; sourceTree = "<group>"; };
-		C85495931EB05BC4007F1BAB /* ZANotificationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZANotificationBar.m; sourceTree = "<group>"; };
+		C85495921EB05BC4007F1BAB /* ZANotificationBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZANotificationBarController.h; sourceTree = "<group>"; };
+		C85495931EB05BC4007F1BAB /* ZANotificationBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZANotificationBarController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +109,7 @@
 				C854452A1EBADF7700E1F562 /* NSString+Character.m */,
 				C842A9481EBC37DE00404D21 /* UILabel+ZANotificationBar.h */,
 				C842A9491EBC37DE00404D21 /* UILabel+ZANotificationBar.m */,
+				C812C5941EC0279E00EBE71E /* ZANotificationBar.h */,
 			);
 			name = Category;
 			sourceTree = "<group>";
@@ -171,8 +173,8 @@
 			isa = PBXGroup;
 			children = (
 				C842A9471EBC37B100404D21 /* Category */,
-				C85495921EB05BC4007F1BAB /* ZANotificationBar.h */,
-				C85495931EB05BC4007F1BAB /* ZANotificationBar.m */,
+				C85495921EB05BC4007F1BAB /* ZANotificationBarController.h */,
+				C85495931EB05BC4007F1BAB /* ZANotificationBarController.m */,
 				C814C9971EB08C5A00DDFB2D /* ZANotifyAction.h */,
 				C814C9981EB08C5A00DDFB2D /* ZANotifyAction.m */,
 				C814C99A1EB095F000DDFB2D /* ZANotificationBarView.h */,
@@ -348,7 +350,7 @@
 			files = (
 				C85495711EB04F08007F1BAB /* ViewController.m in Sources */,
 				C81D2BB81EBB1E780007410E /* ZANotificationBarContext.m in Sources */,
-				C85495941EB05BC4007F1BAB /* ZANotificationBar.m in Sources */,
+				C85495941EB05BC4007F1BAB /* ZANotificationBarController.m in Sources */,
 				C854452B1EBADF7700E1F562 /* NSString+Character.m in Sources */,
 				C854956E1EB04F08007F1BAB /* AppDelegate.m in Sources */,
 				C814C99C1EB095F000DDFB2D /* ZANotificationBarView.m in Sources */,

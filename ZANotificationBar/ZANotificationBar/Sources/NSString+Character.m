@@ -11,15 +11,23 @@
 @implementation NSString (Character)
 
 - (NSUInteger)characterCount {
-    NSUInteger cnt = 0;
-    NSUInteger index = 0;
-    while (index < self.length) {
-        NSRange range = [self rangeOfComposedCharacterSequenceAtIndex:index];
-        cnt++;
-        index += range.length;
-    }
+//    NSUInteger cnt = 0;
+//    NSUInteger index = 0;
+//    while (index < self.length) {
+//        NSRange range = [self rangeOfComposedCharacterSequenceAtIndex:index];
+//        cnt++;
+//        index += range.length;
+//    }
+//    return cnt;
     
-    return cnt;
+    __block NSUInteger count = 0;
+    [self enumerateSubstringsInRange:NSMakeRange(0, [self length])
+                               options:NSStringEnumerationByComposedCharacterSequences
+                            usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+                                count++;
+                            }];
+    
+    return count;
 }
 
 @end
