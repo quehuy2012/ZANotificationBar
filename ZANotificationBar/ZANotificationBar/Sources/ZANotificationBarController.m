@@ -71,7 +71,8 @@
     }
     
     CGRect frame = CGRectMake(0, -BAR_HEIGHT, WINDOW_WIDTH, BAR_HEIGHT);
-    self.notificationBar = [[ZANotificationBarView alloc] initWithContext:self.context];
+    self.notificationBar = [[ZANotificationBarView alloc] initWithFrame:frame];
+    self.notificationBar.context = self.context;
     self.notificationBar.translatesAutoresizingMaskIntoConstraints = NO;
     
     switch (notificationStyle) {

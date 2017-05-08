@@ -41,14 +41,14 @@ typedef NS_ENUM(NSInteger, ZANotificationStyle) {
 /**
  Init a notifacation bar for displaying an alert to the user.
 
- @param header The title of alert
- @param body Descriptive text that provides additional details about the reason for the alert
+ @param title The title of alert
+ @param message Descriptive text that provides additional details about the reason for the alert
  @param preferredStyle The style of the alert. Use this parameter to configure the notification bar as an `simple` or `detail`
  @param handler The block that execute when the use selects the notification message.
  @return an instance ZANotificationBar object
  */
-- (instancetype)initWithHeader:(NSString *)header
-                          body:(NSString *)body
+- (instancetype)initWithTitle:(NSString *)title
+                          message:(NSString *)message
                preferredStyle:(ZANotificationStyle)preferredStyle
                       handler:(void (^)(BOOL))handler;
 
@@ -60,7 +60,7 @@ typedef NS_ENUM(NSInteger, ZANotificationStyle) {
  @param type Sound format (.waw, .mp3 ...)
  @param vibrate The bool value that used to indicate the vibrate effect should turn on or turn off for notification
  */
-- (void)notoficationSoundFromName:(NSString *)name ofType:(NSString *)type vibrate:(BOOL)vibrate;
+- (void)notificationSoundWithName:(NSString *)name ofType:(NSString *)type vibrate:(BOOL)vibrate;
 
 - (void)addAction:(ZANotifyAction *)action;
 

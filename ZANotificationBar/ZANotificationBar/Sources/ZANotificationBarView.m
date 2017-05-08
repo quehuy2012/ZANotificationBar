@@ -163,12 +163,13 @@
 
 - (void)setupBodyLabel {
     self.bodyLabel.text = @"GitHub explore the week of Apr 25 - May 2. Explore this week on GitHub";
+    self.bodyLabel.numberOfLines = 3;
     
     [self.bodyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.bodyLabel.superview.mas_left).with.offset(8);
-        make.right.equalTo(self.bodyLabel.superview.mas_right).with.offset(-8);
-        make.top.equalTo(self.headerVisualEffectView.mas_bottom).with.offset(8);
-        make.bottom.equalTo(self.notificationStyleIndicator.mas_top).with.offset(-8);
+        make.left.equalTo(self.bodyLabel.superview.mas_left).with.offset(16);
+        make.right.equalTo(self.bodyLabel.superview.mas_right).with.offset(-16);
+        make.top.equalTo(self.headerVisualEffectView.mas_bottom).with.offset(0);
+        make.bottom.equalTo(self.notificationStyleIndicator.mas_top).with.offset(-4);
     }];
 }
 
@@ -213,6 +214,8 @@
             weakSelf.mainView.transform = CGAffineTransformIdentity;
         } completion:nil];
     }];
+    
+    //[self.actionsTableView reloadData];
 }
 
 - (void)setupBackgroundView {
@@ -438,7 +441,6 @@
         make.height.mas_equalTo(tableViewHeight).with.priorityHigh();
     }];
     
-    [self.actionsTableView reloadData];
 }
 
 - (void)setupNotificationActionView {
@@ -449,7 +451,7 @@
     self.notificationActionView.clipsToBounds = YES;
     [self.mainView addSubview:self.notificationActionView];
     
-    self.actionsTableView = [[UITableView alloc] init];
+    self.actionsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 300, 150)];
     self.actionsTableView.backgroundColor = [UIColor clearColor];
     self.actionsTableView.dataSource = self;
     self.actionsTableView.delegate = self;
@@ -523,7 +525,8 @@
             [panGesture setTranslation:CGPointMake(0, 0) inView:self];
             
             if (target.frame.origin.y > target.frame.size.height) {
-                [self removeFromSuperview];
+#warning Lỗi ở đây sửa mất cmnr 1 buổi :)
+                //[self removeFromSuperview];
                 [self setupDetailedNotificationBarWithHeader:self.headerLabel.text body:self.bodyLabel.text actions:@[]];
                 return;
             }
@@ -784,7 +787,7 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSLog(@"Number of row: %d", self.context.actions.count);
+    NSLog(@"Table view frame: (%1f,%1f,%1f,%1f)", tableView.frame.origin.x, tableView.frame.origin.y, tableView.frame.size.width, tableView.frame.size.height);
     return self.context.actions.count;
 }
 
