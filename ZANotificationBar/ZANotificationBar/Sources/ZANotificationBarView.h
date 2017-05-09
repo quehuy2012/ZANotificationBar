@@ -17,6 +17,7 @@
 
 #pragma mark - Default NotficationBar Views
 
+@property (nonatomic, readwrite) UIView *notificationMessageView;
 @property (nonatomic, readwrite) UILabel *headerLabel;
 @property (nonatomic, readwrite) UILabel *bodyLabel;
 @property (nonatomic, readwrite) UIImageView *appIcon;
@@ -30,21 +31,7 @@
 @property (nonatomic, readwrite) BOOL dismissLimitReached;
 @property (nonatomic, readwrite) MASConstraint *toolBarBottomConstraint;
 
-#pragma mark - Detailed Banner Views
 
-@property (nonatomic, readonly) UIScrollView *scrollView;
-
-/**
- The view which containing message banner and button action
- */
-@property (nonatomic, readonly) UIView *mainView;
-
-@property (nonatomic, readonly) UILabel *dismissLabel;
-@property (nonatomic, readonly) UITextField *textField;
-@property (nonatomic, readonly) UITextView *messageTextView;
-@property (nonatomic, readonly) UIToolbar *toolBar;
-@property (nonatomic, readonly) UIVisualEffectView *backgroundView;
-@property (nonatomic, readonly) UIVisualEffectView *notificationActionView;
 
 
 - (instancetype)initWithContext:(ZANotificationBarContext *)context;

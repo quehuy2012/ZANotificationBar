@@ -75,7 +75,7 @@
         
         // Type: TextInput
         ZANotifyAction *textInputAction = [[ZANotifyAction alloc] initWithTitle:@"Text Input" type:ZANotificationActionTypeTextInput handler:^(ZANotifyAction *action) {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:action.actionTitle message:@"Apply a style that indicates the action opens an textinput field helps to respond notification as string." preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:action.actionTitle message:[NSString stringWithFormat:@"Response string: %@", action.textResponse] preferredStyle:UIAlertControllerStyleAlert];
             
             [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
             [self presentViewController:alert animated:YES completion:nil];

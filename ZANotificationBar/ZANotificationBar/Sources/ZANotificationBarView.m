@@ -17,6 +17,22 @@
 
 @interface ZANotificationBarView () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
 
+#pragma mark - Detailed Banner Views
+
+@property (nonatomic, readonly) UIScrollView *scrollView;
+
+/**
+ The view which containing message banner and action buttons
+ */
+@property (nonatomic, readonly) UIView *mainView;
+
+@property (nonatomic, readonly) UILabel *dismissLabel;
+@property (nonatomic, readonly) UITextField *textField;
+@property (nonatomic, readonly) UITextView *messageTextView;
+@property (nonatomic, readonly) UIToolbar *toolBar;
+@property (nonatomic, readonly) UIVisualEffectView *backgroundView;
+@property (nonatomic, readonly) UIVisualEffectView *notificationActionView;
+
 @property (nonatomic, readwrite) UIView *detailedBanner;
 @property (nonatomic, readwrite) UILabel *titleLabel;
 @property (nonatomic, readwrite) UIView *separatorView;
@@ -25,6 +41,8 @@
 @property (nonatomic, readwrite) UITableView *actionsTableView;
 
 @property (nonatomic, readwrite) UIPanGestureRecognizer *panGesture;
+
+@property (nonatomic, readwrite) MASConstraint *messageViewTopContraints;
 
 @end
 
@@ -64,6 +82,7 @@
 - (void)commonInit {
     _context = [[ZANotificationBarContext alloc] init];
     
+    _notificationMessageView = [[UIView alloc] init];
     _headerLabel = [[UILabel alloc] init];
     _bodyLabel = [[UILabel alloc] init];
     _appIcon = [[UIImageView alloc] init];
@@ -97,7 +116,10 @@
 #pragma mark - Setup notfication bar
 
 - (void)setupNotificationBar {
-    [self addSubview:self.contentVisualEffectView];
+    [self addSubview:self.notificationMessageView];
+    
+    [self.notificationMessageView addSubview:self.contentVisualEffectView];
+    
     [[self.contentVisualEffectView contentView] addSubview:self.headerVisualEffectView];
     [[self.contentVisualEffectView contentView] addSubview:self.bodyLabel];
     [[self.contentVisualEffectView contentView] addSubview:self.notificationStyleIndicator];
@@ -109,12 +131,23 @@
     [self setupContentVisualEffectView];
     
     // Setup header
+    [self setupNotificationMessageView];
     [self setupHeaderVisualEffectView];
     [self setupAppIcon];
     [self setupHeaderLabel];
     
     [self setupBodyLabel];
     [self setupNotificationStyleIndicator];
+}
+
+- (void)setupNotificationMessageView {
+    UITapGestureRecognizer *didSelectMessageTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didSelectMessage:)];
+    [self.notificationMessageView addGestureRecognizer:didSelectMessageTapGesture];
+
+    [self.notificationMessageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.and.bottom.equalTo(self.notificationMessageView.superview);
+        make.top.equalTo(self.notificationMessageView.superview);
+    }];
 }
 
 - (void)setupContentVisualEffectView {
@@ -232,7 +265,7 @@
 }
 
 - (void)setupMainView:(NSString *)body {
-    //[self.backgroundView addSubview:self.mainView];
+    [self.backgroundView addSubview:self.mainView];
     
     self.mainView.backgroundColor = [UIColor clearColor];
     
@@ -251,7 +284,7 @@
     
     [self.mainView addSubview:self.detailedBanner];
     
-    [self.backgroundView addSubview:self.mainView];
+    //[self.backgroundView addSubview:self.mainView];
     
     // Dismiss label
     self.dismissLabel.text = @"DISMISS";
@@ -329,10 +362,11 @@
     }];
     
     [self.mainView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.mainView.superview).with.offset(16);
-        make.right.equalTo(self.mainView.superview).with.offset(-16);
-        make.top.equalTo(self.mainView.superview).with.offset(20);
+        make.left.equalTo(self.mainView.superview).with.offset(0);
+        make.right.equalTo(self.mainView.superview).with.offset(-0);
+        make.top.equalTo(self.mainView.superview).with.offset(0);
         make.bottom.lessThanOrEqualTo(self.mainView.superview.mas_bottom).with.offset(-10);
+        
         make.height.equalTo(@200).with.priorityLow();
     }];
     
@@ -350,6 +384,7 @@
         make.right.equalTo(self.notificationActionView.superview.mas_right).with.offset(-8);
         make.top.equalTo(self.detailedBanner.mas_bottom).with.offset(10);
         make.bottom.lessThanOrEqualTo(self.notificationActionView.superview.mas_bottom).with.offset(-10);
+        
         make.height.greaterThanOrEqualTo(@0);
     }];
 
@@ -462,7 +497,8 @@
 
 #pragma mark - UI Event
 - (void)closeMessage:(UIButton *)sender {
-    [self.context clearAction];
+#warning
+    //[self.context clearAction];
     [self.textField resignFirstResponder];
     [UIApplication sharedApplication].keyWindow.windowLevel = 0.0;
     
@@ -473,9 +509,24 @@
     } completion:^(BOOL finished) {
         [UIView animateWithDuration:2.0 delay:0.5 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [self.backgroundView removeFromSuperview];
-        } completion:nil];
+        } completion:^(BOOL finished) {
+            [self removeFromSuperview];
+        }];
     }];
 }
+
+- (void)hideNotification:(UIButton *)sender {
+        __weak typeof(self) weakSelf = self;
+        [UIView animateWithDuration:0.5 animations:^{
+            CGRect frame = weakSelf.notificationMessageView.frame;
+            frame.origin = CGPointMake(0, -BAR_HEIGHT);
+            weakSelf.notificationMessageView.frame = frame;
+        } completion:^(BOOL finished) {
+            //[weakSelf removeFromSuperview];
+            APP_DELEGATE.keyWindow.windowLevel = 0.0;
+        }];
+}
+
 
 
 #pragma mark - GestureRecognizer
@@ -490,7 +541,9 @@
     }];
     
     [self closeMessage:nil];
-    self.context.didSelectHandler(true);
+    if (self.context.didSelectHandler) {
+        self.context.didSelectHandler(true);
+    }
 }
 
 - (void)tapToClose:(UITapGestureRecognizer *)tapGesture {
@@ -526,7 +579,7 @@
             
             if (target.frame.origin.y > target.frame.size.height) {
 #warning Lỗi ở đây sửa mất cmnr 1 buổi :)
-                //[self removeFromSuperview];
+                [self hideNotification:nil];
                 [self setupDetailedNotificationBarWithHeader:self.headerLabel.text body:self.bodyLabel.text actions:@[]];
                 return;
             }
@@ -537,7 +590,9 @@
             if (target.frame.origin.y < -(self.contentVisualEffectView.frame.origin.y)) {
                 APP_DELEGATE.keyWindow.windowLevel = 0.0;
                 [self.context clearAction];
-                [self removeFromSuperview];
+                [self hideNotification:nil];
+                
+                //[self.notificationMessageView removeFromSuperview];
                 return;
             }
             
@@ -635,7 +690,8 @@
         }
         case UIGestureRecognizerStateEnded: {
             if (self.dismissLimitReached) {
-                [self setCloseButton:nil];
+                [self closeMessage:nil];
+                
                 return;
             }
             
@@ -730,7 +786,7 @@
     button.titleLabel.font = [UIFont systemFontOfSize:15];
     [button setTitle:@"Send" forState:UIControlStateNormal];
     [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(closeMessage:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     UIBarButtonItem *textFieldBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.textField];
     UIBarButtonItem *sendBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
@@ -742,13 +798,15 @@
         make.left.equalTo(self.textField.superview.mas_left).with.offset(8);
         make.right.equalTo(button.mas_left);
         make.height.equalTo(@30);
-        make.top.and.bottom.equalTo(self.textField.superview).with.offset(8);
+        make.top.equalTo(self.textField.superview).with.offset(8);
+        make.bottom.equalTo(self.textField.superview).with.offset(-8);
     }];
     
     [button mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(button.superview.mas_right);
         make.width.equalTo(@60);
-        make.top.and.bottom.equalTo(button.superview).width.offset(8);
+        make.top.equalTo(button.superview).with.offset(8);
+        make.bottom.equalTo(button.superview).with.offset(-8);
     }];
     
     [self.toolBar mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -764,15 +822,14 @@
 - (void)sendButtonPressed:(UIButton *)sender {
     ZANotifyAction *action = self.context.actions[sender.tag];
     
-    if (!action.actionHandler) {
-        [self closeMessage:sender];
-        return;
+    if (action.actionHandler) {
+        action.textResponse = self.textField.text;
+        action.actionHandler(action);
     }
-    
-    action.textResponse = self.textField.text;
-    action.actionHandler(action);
+
     [self closeMessage:sender];
 }
+
 
 #pragma mark - UIGestureRecognizerDelegate
 

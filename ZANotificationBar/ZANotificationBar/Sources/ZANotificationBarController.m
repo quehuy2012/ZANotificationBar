@@ -118,9 +118,7 @@
     self.notificationBar.contentVisualEffectView.layer.cornerRadius = 14.0;
     self.notificationBar.contentVisualEffectView.clipsToBounds = YES;
     
-    UITapGestureRecognizer *didSelectMessageTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self.notificationBar action:@selector(didSelectMessage:)];
-    [self.notificationBar addGestureRecognizer:didSelectMessageTapGesture];
-    
+       
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         self.notificationBar.frame = CGRectMake(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
     } completion:nil];
@@ -166,18 +164,5 @@
     [self.context addAction:action];
 }
 
-- (void)hideNotification:(UIButton *)sender {
-    if (self.notificationBar) {
-        __weak typeof(self) weakSelf = self;
-        [UIView animateWithDuration:0.5 animations:^{
-            CGRect frame = weakSelf.notificationBar.frame;
-            frame.origin = CGPointMake(0, -BAR_HEIGHT);
-            weakSelf.notificationBar.frame = frame;
-        } completion:^(BOOL finished) {
-            [weakSelf.notificationBar removeFromSuperview];
-            APP_DELEGATE.keyWindow.windowLevel = 0.0;
-        }];
-    }
-}
 
 @end
