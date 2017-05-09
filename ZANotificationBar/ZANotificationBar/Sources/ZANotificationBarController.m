@@ -132,6 +132,18 @@
     }];
 }
 
+- (void)hideNotification:(UIButton *)sender {
+    __weak typeof(self) weakSelf = self;
+    [UIView animateWithDuration:0.5 animations:^{
+        CGRect frame = weakSelf.notificationBar.frame;
+        frame.origin = CGPointMake(0, -BAR_HEIGHT);
+        weakSelf.notificationBar.frame = frame;
+    } completion:^(BOOL finished) {
+        [weakSelf.notificationBar removeFromSuperview];
+        APP_DELEGATE.keyWindow.windowLevel = 0.0;
+    }];
+}
+
 #pragma mark - Publics
 
 - (void)notificationSoundWithName:(NSString *)name ofType:(NSString *)type vibrate:(BOOL)vibrate {

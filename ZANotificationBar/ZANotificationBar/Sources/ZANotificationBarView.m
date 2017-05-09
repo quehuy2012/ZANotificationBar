@@ -52,6 +52,7 @@
 #pragma mark - Life cycle
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     NSLog(@"Dealloc view");
 }
 
@@ -111,7 +112,54 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardwillHide:) name:UIKeyboardWillHideNotification object:nil];
+    
 }
+
+- (void) didRotate:(NSNotification *)notification
+{
+    UILabel *messageLabel = [[UILabel alloc] init];
+    messageLabel.text = self.messageTextView.text;
+    CGFloat expectedContentHeight = self.context.actions.count * 50 + [messageLabel heightToFit:messageLabel.text width:[UIApplication sharedApplication].keyWindow.frame.size.width];
+    CGFloat messageHeight;
+    CGFloat tableViewHeight = 0;
+    NSInteger priority;
+    if (expectedContentHeight > ([UIApplication sharedApplication].keyWindow.frame.size.height - 100)) {
+        priority = 750;
+        CGFloat windowHeight = MIN(APP_DELEGATE.keyWindow.frame.size.height, APP_DELEGATE.keyWindow.frame.size.width);
+        messageHeight = windowHeight / 2;
+        
+        tableViewHeight = MIN(150, self.context.actions.count * 50);
+        self.actionsTableView.scrollEnabled = self.context.actions.count > 3 ? YES : NO;
+        self.messageTextView.scrollEnabled = YES;
+    } else {
+        messageHeight = 100;
+        priority = 250;
+        
+        tableViewHeight = self.context.actions.count * 50;
+        self.actionsTableView.scrollEnabled = NO;
+    }
+    
+    [self.actionsTableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.equalTo(self.actionsTableView.superview);
+        make.bottom.lessThanOrEqualTo(self.actionsTableView.superview);
+        make.height.mas_equalTo(tableViewHeight).with.priority(751);
+
+    }];
+    
+    [self.messageTextView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.messageTextView.superview.mas_left).with.offset(15);
+        make.right.equalTo(self.messageTextView.superview.mas_right).with.offset(-15);
+        make.top.equalTo(self.separatorView.mas_bottom).with.offset(8);
+        make.bottom.lessThanOrEqualTo(self.messageTextView.superview.mas_bottom).with.offset(-5);
+        
+        make.height.mas_equalTo(messageHeight).with.priority(751);
+    }];
+
+//    [self.actionsTableView setNeedsLayout];
+//    [self.messageTextView setNeedsLayout];
+    [self setNeedsLayout];
+}
+
 
 #pragma mark - Setup notfication bar
 
@@ -388,18 +436,26 @@
         make.height.greaterThanOrEqualTo(@0);
     }];
 
-#warning
     UILabel *messageLabel = [[UILabel alloc] init];
     messageLabel.text = self.messageTextView.text;
     CGFloat expectedContentHeight = self.context.actions.count * 50 + [messageLabel heightToFit:messageLabel.text width:[UIApplication sharedApplication].keyWindow.frame.size.width];
     CGFloat messageHeight;
+    CGFloat tableViewHeight = 0;
     NSInteger priority;
     if (expectedContentHeight > ([UIApplication sharedApplication].keyWindow.frame.size.height - 50)) {
-        messageHeight = [UIApplication sharedApplication].keyWindow.frame.size.height - self.context.actions.count < 4 ? self.context.actions.count * 50 : 200;
         priority = 750;
+        CGFloat windowHeight = MIN(APP_DELEGATE.keyWindow.frame.size.height, APP_DELEGATE.keyWindow.frame.size.width);
+        messageHeight = windowHeight / 2;
+
+        tableViewHeight = MIN(150.0, self.context.actions.count * 50);
+        self.actionsTableView.scrollEnabled = self.context.actions.count > 3 ? YES : NO;
+        self.messageTextView.scrollEnabled = YES;
     } else {
-        messageHeight = 30;
+        messageHeight = 100;
         priority = 250;
+        
+        tableViewHeight = self.context.actions.count * 50;
+        self.actionsTableView.scrollEnabled = NO;
     }
     
     [self.messageTextView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -453,29 +509,13 @@
     }];
     
     
-    CGFloat tableViewHeight = 0;
-    UILabel *testLabel = [[UILabel alloc] init];
-    testLabel.text = self.messageTextView.text;
-    CGFloat test = self.context.actions.count * 50 + [testLabel heightToFit:self.messageTextView.text width:[UIApplication sharedApplication].keyWindow.frame.size.width];
-    
-    if (test > [UIApplication sharedApplication].keyWindow.frame.size.height - 50) {
-        self.actionsTableView.scrollEnabled = self.context.actions.count > 4 ? YES : NO;
-        self.messageTextView.scrollEnabled = YES;
-        tableViewHeight = MIN(200, self.context.actions.count * 50);
-    } else {
-        self.actionsTableView.scrollEnabled = NO;
-        tableViewHeight = self.context.actions.count * 50;
-    }
-    
-    NSLog(@"Table view height:%f", tableViewHeight);
-
-    
     [self.actionsTableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.equalTo(self.actionsTableView.superview);
         make.bottom.lessThanOrEqualTo(self.actionsTableView.superview);
-        make.height.mas_equalTo(tableViewHeight).with.priorityHigh();
+        make.height.mas_equalTo(tableViewHeight).with.priority(751);
     }];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (void)setupNotificationActionView {
@@ -497,7 +537,6 @@
 
 #pragma mark - UI Event
 - (void)closeMessage:(UIButton *)sender {
-#warning
     //[self.context clearAction];
     [self.textField resignFirstResponder];
     [UIApplication sharedApplication].keyWindow.windowLevel = 0.0;
@@ -578,8 +617,6 @@
             [panGesture setTranslation:CGPointMake(0, 0) inView:self];
             
             if (target.frame.origin.y > target.frame.size.height) {
-#warning Lỗi ở đây sửa mất cmnr 1 buổi :)
-                [self hideNotification:nil];
                 [self setupDetailedNotificationBarWithHeader:self.headerLabel.text body:self.bodyLabel.text actions:@[]];
                 return;
             }
@@ -590,9 +627,15 @@
             if (target.frame.origin.y < -(self.contentVisualEffectView.frame.origin.y)) {
                 APP_DELEGATE.keyWindow.windowLevel = 0.0;
                 [self.context clearAction];
-                [self hideNotification:nil];
                 
-                //[self.notificationMessageView removeFromSuperview];
+                [UIView animateWithDuration:0.5 animations:^{
+                    CGRect frame = self.frame;
+                    frame.origin = CGPointMake(target.frame.origin.x, -BAR_HEIGHT);
+                    target.frame = frame;
+                } completion:^(BOOL finished) {
+                    [self removeFromSuperview];
+                }];
+
                 return;
             }
             
@@ -814,7 +857,7 @@
         self.toolBarBottomConstraint = make.bottom.equalTo(self.backgroundView.mas_bottom);
     }];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.textField becomeFirstResponder];
     });
 }
@@ -844,7 +887,6 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSLog(@"Table view frame: (%1f,%1f,%1f,%1f)", tableView.frame.origin.x, tableView.frame.origin.y, tableView.frame.size.width, tableView.frame.size.height);
     return self.context.actions.count;
 }
 

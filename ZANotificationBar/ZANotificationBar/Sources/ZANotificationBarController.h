@@ -64,6 +64,4 @@ typedef NS_ENUM(NSInteger, ZANotificationStyle) {
 
 - (void)addAction:(ZANotifyAction *)action;
 
-- (void)hideNotification:(UIButton *)sender;
-
 @end

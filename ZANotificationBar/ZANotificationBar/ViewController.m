@@ -33,6 +33,8 @@
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard:)];
     
+    
+    
     [self.view addGestureRecognizer:tapGesture];
 }
 
@@ -88,6 +90,9 @@
     if (self.sound.isOn) {
         [notificationBar notificationSoundWithName:self.soundName.text ofType:self.soundType.text vibrate:self.vibrate.isOn];
     }
+}
+- (IBAction)timeOutInterval:(UIStepper *)sender {
+    self.timeOutLabel.text = [NSString stringWithFormat:@"Time out interval %.1f", sender.value];
 }
 
 - (void)hideKeyboard:(UIButton *)sender {
