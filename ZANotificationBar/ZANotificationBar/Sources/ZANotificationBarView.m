@@ -280,7 +280,7 @@
     [[UIApplication sharedApplication].keyWindow addSubview:self.backgroundView];
     
     self.toolBar.hidden = YES;
-    [self.backgroundView addSubview:self.toolBar];
+    [self.backgroundView.contentView addSubview:self.toolBar];
     
     // Autolayout
     [self setupDetailedNotificationBarLayout];
@@ -313,7 +313,7 @@
 }
 
 - (void)setupMainView:(NSString *)body {
-    [self.backgroundView addSubview:self.mainView];
+    [self.backgroundView.contentView addSubview:self.mainView];
     
     self.mainView.backgroundColor = [UIColor clearColor];
     
@@ -532,7 +532,7 @@
     self.actionsTableView.delegate = self;
     self.actionsTableView.showsVerticalScrollIndicator = NO;
     self.actionsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.notificationActionView addSubview:self.actionsTableView];
+    [self.notificationActionView.contentView addSubview:self.actionsTableView];
 }
 
 #pragma mark - UI Event

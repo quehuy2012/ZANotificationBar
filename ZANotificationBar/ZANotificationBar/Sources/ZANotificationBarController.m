@@ -114,7 +114,6 @@
     self.notificationBar.appIcon.layer.cornerRadius = 5.0;
     self.notificationBar.appIcon.clipsToBounds = YES;
     
-#warning not sure is headerVisual or contentVisual
     self.notificationBar.contentVisualEffectView.layer.cornerRadius = 14.0;
     self.notificationBar.contentVisualEffectView.clipsToBounds = YES;
     
@@ -127,7 +126,13 @@
     [APP_DELEGATE.keyWindow addSubview:self.notificationBar];
     
     [self.notificationBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.and.top.equalTo(self.notificationBar.superview);
+        if (@available(iOS 11.0, *)) {
+            make.top.equalTo(self.notificationBar.superview.mas_safeAreaLayoutGuideTop);
+        }
+        else {
+            make.top.equalTo(self.notificationBar.superview.mas_top);
+        }
+        make.left.and.right.equalTo(self.notificationBar.superview);
         make.height.equalTo(@100);
     }];
 }
